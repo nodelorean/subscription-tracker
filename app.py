@@ -2,11 +2,13 @@ import sqlite3
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from dotenv import load_dotenv
 import os
 
 # --- Configuration de l'application ---
 app = Flask(__name__)
-app.secret_key = 'test123'  # Clé pour sécuriser les sessions utilisateur
+load_dotenv()
+app.secret_key = os.environ.get("SECRET_KEY")  # Clé pour sécuriser les sessions utilisateur
 
 DATABASE = 'database.db'
 
