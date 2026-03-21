@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubTrack · suivis et gestion d'abonnement</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="app-bg"></div>
+    
+    <!-- Page déconnecté (Landing) -->
+    <div class="logged-out-bg"></div>
+    <div class="logged-out-mirror"></div>
+    <div class="logged-out-container" id="loggedOutContainer">
+        <div class="logged-out-hero">
+            <h1 class="logged-out-title">Maîtrisez vos abonnement</h1>
+            <p class="logged-out-subtitle">Visualisez, analysez et optimisez vos dépenses mensuelles en un seul endroit.</p>
+            <div class="logged-out-cta">
+                <button class="btn btn-primary" id="loggedOutLoginBtn">Connexion</button>
+                <button class="btn btn-ghost" id="loggedOutRegisterBtn">Inscription</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container" id="mainContainer">
+        <header class="header">
+            <div class="header-top">
+                <h1>SubTrack</h1>
+                <div class="user-area">
+                    <span id="welcomeMessage" class="welcome-message" style="display: none;">👋 <span id="usernameDisplay"></span></span>
+                    <button class="btn btn-ghost" id="loginBtn">Connexion</button>
+                    <button class="btn btn-ghost" id="registerBtn">Inscription</button>
+                    <button class="btn btn-ghost" id="logoutBtn" style="display: none;">Déconnexion</button>
+                </div>
+            </div>
+            <p class="subtitle">Visualisez et maîtrisez vos dépenses mensuelles</p>
+        </header>
+
+        <div class="actions-bar" id="actionsBar" style="display: none;">
+            <button class="btn btn-primary" id="addBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Ajouter un abonnement
+            </button>
+            <button class="btn btn-secondary" id="importBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Importer CSV
+            </button>
+        </div>
+
+        <main class="bento-grid" id="subscriptionGrid"></main>
+
+        <section class="opportunity-section" id="opportunitySection">
+            <h2 class="opportunity-title">Analyse d'opportunité</h2>
+            <div class="opportunity-grid" id="opportunityGrid"></div>
+        </section>
+
+        <footer class="summary-bar" id="summaryBar" style="display: none;">
+            <div class="summary-item">
+                <span class="summary-label">Total / Mois</span>
+                <span class="summary-value" id="monthlyTotal">0.00 €</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-item">
+                <span class="summary-label">Total / An</span>
+                <span class="summary-value yearly" id="yearlyTotal">0.00 €</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- fenetre Connexion -->
+    <div class="modal" id="loginModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Connexion</h2>
+                <button class="modal-close" id="closeLoginModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">Nom d'utilisateur</label>
+                    <input type="text" id="loginUsername" placeholder="ex: johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Se connecter</button>
+                <div id="loginError" class="form-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- fenetre Inscription -->
+    <div class="modal" id="registerModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Inscription</h2>
+                <button class="modal-close" id="closeRegisterModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUsername">Nom d'utilisateur</label>
+                    <input type="text" id="registerUsername" placeholder="ex: johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Mot de passe</label>
+                    <input type="password" id="registerPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">S'inscrire</button>
+                <div id="registerError" class="form-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ajout -->
+    <div class="modal" id="addModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter un abonnement</h2>
+                <button class="modal-close" id="closeModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab-btn active" data-tab="presets">Présélections</button>
+                <button class="tab-btn" data-tab="manual">Manuel</button>
+            </div>
+            <div class="tab-content active" id="presetsTab">
+                <div class="presets-grid" id="presetsGrid"></div>
+                <div class="selected-preset-info" id="selectedPresetInfo" style="display: none;">
+                    <form id="presetForm">
+                        <div class="form-group">
+                            <label for="presetServiceName">Service</label>
+                            <input type="text" id="presetServiceName" readonly>
+                        </div>
+                        <div class="form-group" id="presetPlanGroup">
+                            <label>Choisir l'offre</label>
+                            <div class="plan-selector" id="presetPlanSelector"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="presetPrice">Prix (€)</label>
+                                <input type="number" id="presetPrice" step="0.01" min="0" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="presetBillingCycle">Facturation</label>
+                                <select id="presetBillingCycle" required>
+                                    <option value="monthly">Mensuel</option>
+                                    <option value="yearly">Annuel</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="presetNextDate">Prochain paiement</label>
+                                <input type="date" id="presetNextDate">
+                            </div>
+                            <div class="form-group form-checkbox">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="presetShared">
+                                    <span class="checkbox-custom"></span>
+                                    Abonnement partagé
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter l'abonnement</button>
+                    </form>
+                </div>
+            </div>
+            <div class="tab-content" id="manualTab">
+                <form id="subscriptionForm">
+                    <div class="form-group">
+                        <label for="serviceInput">Service</label>
+                        <div class="manual-input-wrapper">
+                            <input type="text" id="serviceInput" placeholder="Tapez le nom du service..." autocomplete="off" required>
+                            <div class="datalist-dropdown" id="serviceDropdown" style="display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="form-group" id="planSelectorGroup" style="display: none;">
+                        <label>Choisir l'offre</label>
+                        <div class="plan-selector" id="planSelector"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="price">Prix (€)</label>
+                            <input type="number" id="price" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="billingCycle">Facturation</label>
+                            <select id="billingCycle" required>
+                                <option value="monthly">Mensuel</option>
+                                <option value="yearly">Annuel</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nextDate">Prochain paiement</label>
+                            <input type="date" id="nextDate">
+                        </div>
+                        <div class="form-group form-checkbox">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="sharedSubscription">
+                                <span class="checkbox-custom"></span>
+                                Abonnement partagé
+                            </label>
+                        </div>
+                    </div>
+                    <!-- AJOUT : Champ pour l'URL de l'icône -->
+                    <div class="form-group">
+                        <label for="iconUrl">URL de l'icône (optionnel)</label>
+                        <input type="url" id="iconUrl" placeholder="https://exemple.com/icone.png">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ajouter l'abonnement</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Import CSV -->
+    <div class="modal" id="importModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Importer un fichier CSV</h2>
+                <button class="modal-close" id="closeImportModal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="file-drop-zone" id="dropZone">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="12" y1="18" x2="12" y2="12"></line>
+                    <line x1="9" y1="15" x2="12" y2="12"></line>
+                    <line x1="15" y1="15" x2="12" y2="12"></line>
+                </svg>
+                <p>Glissez votre fichier CSV ici</p>
+                <span>ou</span>
+                <input type="file" id="fileInput" accept=".csv">
+                <button class="btn btn-secondary" id="browseFileBtn">Parcourir</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
