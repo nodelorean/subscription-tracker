@@ -3,9 +3,12 @@ __pycache__/
 *.pyc
 *.pyo
 
-# Base de données (données personnelles)
+# Base de données
 database.db
 
-# Environnement virtuel si tu en as un
+# Environnement virtuel
 venv/
 env/
+
+# Variables d'environnement
+.env
