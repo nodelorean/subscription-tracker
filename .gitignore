@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Base de données (données personnelles)
+database.db
+
+# Environnement virtuel si tu en as un
+venv/
+env/
