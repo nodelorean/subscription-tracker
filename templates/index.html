@@ -18,11 +18,11 @@
     <div class="logged-out-mirror"></div>
     <div class="logged-out-container" id="loggedOutContainer">
         <div class="logged-out-hero">
-            <h1 class="logged-out-title">Maîtrisez vos abonnement</h1>
-            <p class="logged-out-subtitle">Visualisez, analysez et optimisez vos dépenses mensuelles en un seul endroit.</p>
+            <h1 class="logged-out-title" data-i18n="hero_title">Maîtrisez vos abonnements</h1>
+            <p class="logged-out-subtitle" data-i18n="hero_subtitle">Visualisez, analysez et optimisez vos dépenses mensuelles en un seul endroit.</p>
             <div class="logged-out-cta">
-                <button class="btn btn-primary" id="loggedOutLoginBtn">Connexion</button>
-                <button class="btn btn-ghost" id="loggedOutRegisterBtn">Inscription</button>
+                <button class="btn btn-primary" id="loggedOutLoginBtn" data-i18n="login">Connexion</button>
+                <button class="btn btn-ghost" id="loggedOutRegisterBtn" data-i18n="register">Inscription</button>
             </div>
         </div>
     </div>
@@ -32,13 +32,29 @@
             <div class="header-top">
                 <h1>SubTrack</h1>
                 <div class="user-area">
+                    <div class="settings-bar">
+                        <div class="select-wrapper">
+                            <select id="currencySelect" class="header-select">
+                                <option value="EUR">EUR (€)</option>
+                                <option value="USD">USD ($)</option>
+                                <option value="GBP">GBP (£)</option>
+                            </select>
+                        </div>
+                        <div class="select-wrapper">
+                            <select id="langSelect" class="header-select">
+                                <option value="fr">FR 🇫🇷</option>
+                                <option value="en">EN 🇬🇧</option>
+                                <option value="es">ES 🇪🇸</option>
+                            </select>
+                        </div>
+                    </div>
                     <span id="welcomeMessage" class="welcome-message" style="display: none;">👋 <span id="usernameDisplay"></span></span>
-                    <button class="btn btn-ghost" id="loginBtn">Connexion</button>
-                    <button class="btn btn-ghost" id="registerBtn">Inscription</button>
-                    <button class="btn btn-ghost" id="logoutBtn" style="display: none;">Déconnexion</button>
+                    <button class="btn btn-ghost" id="loginBtn" data-i18n="login">Connexion</button>
+                    <button class="btn btn-ghost" id="registerBtn" data-i18n="register">Inscription</button>
+                    <button class="btn btn-ghost" id="logoutBtn" style="display: none;" data-i18n="logout">Déconnexion</button>
                 </div>
             </div>
-            <p class="subtitle">Visualisez et maîtrisez vos dépenses mensuelles</p>
+            <p class="subtitle" data-i18n="subtitle">Visualisez et maîtrisez vos dépenses mensuelles</p>
         </header>
 
         <div class="actions-bar" id="actionsBar" style="display: none;">
@@ -47,7 +63,7 @@
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                Ajouter un abonnement
+                <span data-i18n="add_sub">Ajouter un abonnement</span>
             </button>
             <button class="btn btn-secondary" id="importBtn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,25 +71,52 @@
                     <polyline points="17 8 12 3 7 8"></polyline>
                     <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                Importer CSV
+                <span data-i18n="import_csv">Importer CSV</span>
             </button>
         </div>
 
         <main class="bento-grid" id="subscriptionGrid"></main>
 
         <section class="opportunity-section" id="opportunitySection">
-            <h2 class="opportunity-title">Analyse d'opportunité</h2>
+            <h2 class="opportunity-title" data-i18n="opportunity_title">Analyse d'opportunité</h2>
             <div class="opportunity-grid" id="opportunityGrid"></div>
+        </section>
+
+        <!-- Analyseur de Streaming -->
+        <section class="streaming-section" id="streamingSection" style="display: none;">
+            <h2 class="section-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect>
+                    <polyline points="17 2 12 7 7 2"></polyline>
+                </svg>
+                <span data-i18n="streaming_title">Analyse de vos abonnements streaming</span>
+            </h2>
+            <div class="streaming-content" id="streamingContent"></div>
+        </section>
+
+        <!-- Projection de prix -->
+        <section class="projection-section" id="projectionSection" style="display: none;">
+            <h2 class="section-title">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+                <span data-i18n="projection_title">Projection des hausses de prix</span>
+            </h2>
+            <p class="projection-subtitle" data-i18n="projection_subtitle">Streaming : +8%/an | Logiciels : +5%/an | Autres : +1%/an</p>
+            <div class="projection-chart-container">
+                <canvas id="projectionChart"></canvas>
+            </div>
+            <div class="projection-info" id="projectionIncrease"></div>
         </section>
 
         <footer class="summary-bar" id="summaryBar" style="display: none;">
             <div class="summary-item">
-                <span class="summary-label">Total / Mois</span>
+                <span class="summary-label" data-i18n="total_month">Total / Mois</span>
                 <span class="summary-value" id="monthlyTotal">0.00 €</span>
             </div>
             <div class="summary-divider"></div>
             <div class="summary-item">
-                <span class="summary-label">Total / An</span>
+                <span class="summary-label" data-i18n="total_year">Total / An</span>
                 <span class="summary-value yearly" id="yearlyTotal">0.00 €</span>
             </div>
         </footer>
@@ -84,7 +127,7 @@
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Connexion</h2>
+                <h2 data-i18n="login">Connexion</h2>
                 <button class="modal-close" id="closeLoginModal">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -94,14 +137,14 @@
             </div>
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginUsername">Nom d'utilisateur</label>
+                    <label for="loginUsername" data-i18n="username">Nom d'utilisateur</label>
                     <input type="text" id="loginUsername" placeholder="ex: johndoe" required>
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Mot de passe</label>
+                    <label for="loginPassword" data-i18n="password">Mot de passe</label>
                     <input type="password" id="loginPassword" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Se connecter</button>
+                <button type="submit" class="btn btn-primary" data-i18n="do_login">Se connecter</button>
                 <div id="loginError" class="form-error"></div>
             </form>
         </div>
@@ -112,7 +155,7 @@
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Inscription</h2>
+                <h2 data-i18n="register">Inscription</h2>
                 <button class="modal-close" id="closeRegisterModal">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -122,14 +165,14 @@
             </div>
             <form id="registerForm">
                 <div class="form-group">
-                    <label for="registerUsername">Nom d'utilisateur</label>
+                    <label for="registerUsername" data-i18n="username">Nom d'utilisateur</label>
                     <input type="text" id="registerUsername" placeholder="ex: johndoe" required>
                 </div>
                 <div class="form-group">
-                    <label for="registerPassword">Mot de passe</label>
+                    <label for="registerPassword" data-i18n="password">Mot de passe</label>
                     <input type="password" id="registerPassword" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
+                <button type="submit" class="btn btn-primary" data-i18n="do_register">S'inscrire</button>
                 <div id="registerError" class="form-error"></div>
             </form>
         </div>
@@ -140,7 +183,7 @@
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Ajouter un abonnement</h2>
+                <h2 id="modalTitle" data-i18n="add_sub">Ajouter un abonnement</h2>
                 <button class="modal-close" id="closeModal">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -149,96 +192,95 @@
                 </button>
             </div>
             <div class="modal-tabs">
-                <button class="tab-btn active" data-tab="presets">Présélections</button>
-                <button class="tab-btn" data-tab="manual">Manuel</button>
+                <button class="tab-btn active" data-tab="presets" data-i18n="presets">Présélections</button>
+                <button class="tab-btn" data-tab="manual" data-i18n="manual">Manuel</button>
             </div>
             <div class="tab-content active" id="presetsTab">
                 <div class="presets-grid" id="presetsGrid"></div>
                 <div class="selected-preset-info" id="selectedPresetInfo" style="display: none;">
                     <form id="presetForm">
                         <div class="form-group">
-                            <label for="presetServiceName">Service</label>
+                            <label for="presetServiceName" data-i18n="service">Service</label>
                             <input type="text" id="presetServiceName" readonly>
                         </div>
                         <div class="form-group" id="presetPlanGroup">
-                            <label>Choisir l'offre</label>
+                            <label data-i18n="choose_plan">Choisir l'offre</label>
                             <div class="plan-selector" id="presetPlanSelector"></div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="presetPrice">Prix (€)</label>
+                                <label for="presetPrice" data-i18n="price">Prix (€)</label>
                                 <input type="number" id="presetPrice" step="0.01" min="0" placeholder="0.00" required>
                             </div>
                             <div class="form-group">
-                                <label for="presetBillingCycle">Facturation</label>
+                                <label for="presetBillingCycle" data-i18n="billing">Facturation</label>
                                 <select id="presetBillingCycle" required>
-                                    <option value="monthly">Mensuel</option>
-                                    <option value="yearly">Annuel</option>
+                                    <option value="monthly" data-i18n="monthly">Mensuel</option>
+                                    <option value="yearly" data-i18n="yearly">Annuel</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="presetNextDate">Prochain paiement</label>
+                                <label for="presetNextDate" data-i18n="next_payment">Prochain paiement</label>
                                 <input type="date" id="presetNextDate">
                             </div>
                             <div class="form-group form-checkbox">
                                 <label class="checkbox-label">
                                     <input type="checkbox" id="presetShared">
                                     <span class="checkbox-custom"></span>
-                                    Abonnement partagé
+                                    <span data-i18n="shared_sub">Abonnement partagé</span>
                                 </label>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Ajouter l'abonnement</button>
+                        <button type="submit" class="btn btn-primary" data-i18n="add_sub_btn">Ajouter l'abonnement</button>
                     </form>
                 </div>
             </div>
             <div class="tab-content" id="manualTab">
                 <form id="subscriptionForm">
                     <div class="form-group">
-                        <label for="serviceInput">Service</label>
+                        <label for="serviceInput" data-i18n="service">Service</label>
                         <div class="manual-input-wrapper">
                             <input type="text" id="serviceInput" placeholder="Tapez le nom du service..." autocomplete="off" required>
                             <div class="datalist-dropdown" id="serviceDropdown" style="display: none;"></div>
                         </div>
                     </div>
                     <div class="form-group" id="planSelectorGroup" style="display: none;">
-                        <label>Choisir l'offre</label>
+                        <label data-i18n="choose_plan">Choisir l'offre</label>
                         <div class="plan-selector" id="planSelector"></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="price">Prix (€)</label>
+                            <label for="price" data-i18n="price">Prix (€)</label>
                             <input type="number" id="price" step="0.01" min="0" placeholder="0.00" required>
                         </div>
                         <div class="form-group">
-                            <label for="billingCycle">Facturation</label>
+                            <label for="billingCycle" data-i18n="billing">Facturation</label>
                             <select id="billingCycle" required>
-                                <option value="monthly">Mensuel</option>
-                                <option value="yearly">Annuel</option>
+                                <option value="monthly" data-i18n="monthly">Mensuel</option>
+                                <option value="yearly" data-i18n="yearly">Annuel</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="nextDate">Prochain paiement</label>
+                            <label for="nextDate" data-i18n="next_payment">Prochain paiement</label>
                             <input type="date" id="nextDate">
                         </div>
                         <div class="form-group form-checkbox">
                             <label class="checkbox-label">
                                 <input type="checkbox" id="sharedSubscription">
                                 <span class="checkbox-custom"></span>
-                                Abonnement partagé
+                                <span data-i18n="shared_sub">Abonnement partagé</span>
                             </label>
                         </div>
                     </div>
-                    <!-- AJOUT : Champ pour l'URL de l'icône -->
                     <div class="form-group">
-                        <label for="iconUrl">URL de l'icône (optionnel)</label>
+                        <label for="iconUrl" data-i18n="icon_url">URL de l'icône (optionnel)</label>
                         <input type="url" id="iconUrl" placeholder="https://exemple.com/icone.png">
                     </div>
-                    <button type="submit" class="btn btn-primary">Ajouter l'abonnement</button>
+                    <button type="submit" class="btn btn-primary" data-i18n="add_sub_btn">Ajouter l'abonnement</button>
                 </form>
             </div>
         </div>
@@ -249,7 +291,7 @@
         <div class="modal-overlay"></div>
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Importer un fichier CSV</h2>
+                <h2 data-i18n="import_csv_title">Importer un fichier CSV</h2>
                 <button class="modal-close" id="closeImportModal">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -265,10 +307,10 @@
                     <line x1="9" y1="15" x2="12" y2="12"></line>
                     <line x1="15" y1="15" x2="12" y2="12"></line>
                 </svg>
-                <p>Glissez votre fichier CSV ici</p>
-                <span>ou</span>
+                <p data-i18n="drag_csv">Glissez votre fichier CSV ici</p>
+                <span data-i18n="or">ou</span>
                 <input type="file" id="fileInput" accept=".csv">
-                <button class="btn btn-secondary" id="browseFileBtn">Parcourir</button>
+                <button class="btn btn-secondary" id="browseFileBtn" data-i18n="browse">Parcourir</button>
             </div>
         </div>
     </div>
