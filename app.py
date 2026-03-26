@@ -1,18 +1,19 @@
 import sqlite3
+import re
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from dotenv import load_dotenv
 import os
 
-# --- Configuration de l'application ---
+#Configuration de l'application
 app = Flask(__name__)
 load_dotenv()
 app.secret_key = os.environ.get("SECRET_KEY")  # Clé pour sécuriser les sessions utilisateur
 
 DATABASE = 'database.db'
 
-# --- Gestion de la base de données ---
+# Gestion de la base de données
 def get_db():
     """Établit une connexion à la base de données SQLite."""
     conn = sqlite3.connect(DATABASE)
@@ -24,11 +25,12 @@ def init_db():
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
-        # Table des utilisateurs (stocke les identifiants et mots de passe hachés)
+        # Table des utilisateurs avec email
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL
             )
         ''')
@@ -43,6 +45,7 @@ def init_db():
                 icon TEXT,
                 shared INTEGER DEFAULT 0,
                 next_billing_date TEXT,
+                category TEXT DEFAULT 'other',
                 FOREIGN KEY (user_id) REFERENCES users (id)
             )
         ''')
@@ -56,13 +59,34 @@ def init_db():
             cursor.execute('ALTER TABLE subscriptions ADD COLUMN next_billing_date TEXT')
         except:
             pass
+        try:
+            cursor.execute('ALTER TABLE users ADD COLUMN email TEXT UNIQUE')
+        except:
+            pass
+        try:
+            cursor.execute('ALTER TABLE subscriptions ADD COLUMN category TEXT DEFAULT "other"')
+        except:
+            pass
             
         db.commit()
         db.close()
 
 init_db()
 
-# --- Sécurité et Décorateurs ---
+#Validation d'email
+def is_valid_email(email):
+    """Vérifie si l'adresse email a un format valide."""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(pattern, email):
+        return False
+    # Domaines courants acceptés
+    valid_domains = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com', 'orange.fr', 
+                     'free.fr', 'live.fr', 'wanadoo.fr', 'sfr.fr', 'laposte.net',
+                     'protonmail.com', 'icloud.com', 'aol.com', 'mail.com']
+    domain = email.split('@')[1].lower()
+    return domain in valid_domains
+
+# Sécurité et Décorateurs
 def login_required(f):
     """Décorateur pour protéger les routes : vérifie si l'utilisateur est connecté."""
     @wraps(f)
@@ -77,53 +101,81 @@ def index():
     """Affiche la page d'accueil (template HTML)."""
     return render_template('index.html')
 
-# --- API Authentification ---
+#API Authentification
 
 @app.route('/api/register', methods=['POST'])
 def register():
-    """Inscrir un nouvel utilisateur, hache le mot de passe et démarre une session."""
+    """Inscrire un nouvel utilisateur avec email, username et mot de passe."""
     data = request.get_json()
     username = data.get('username')
+    email = data.get('email')
     password = data.get('password')
 
-    if not username or not password:
-        return jsonify({'error': 'Nom d’utilisateur et mot de passe requis'}), 400
+    # Validation des champs
+    if not username or not email or not password:
+        return jsonify({'error': 'Nom d\'utilisateur, email et mot de passe requis'}), 400
+    
+    # Validation du nom d'utilisateur (3-20 caractères)
+    if len(username) < 3 or len(username) > 20:
+        return jsonify({'error': 'Le nom d\'utilisateur doit contenir entre 3 et 20 caractères'}), 400
+    
+    # Validation de l'email
+    if not is_valid_email(email):
+        return jsonify({'error': 'Adresse email invalide. Utilisez gmail, hotmail, outlook, etc.'}), 400
+    
+    # Validation du mot de passe (minimum 6 caractères)
+    if len(password) < 6:
+        return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractères'}), 400
 
     db = get_db()
     cursor = db.cursor()
     try:
-        cursor.execute('INSERT INTO users (username, password_hash) VALUES (?, ?)',
-                       (username, generate_password_hash(password)))
+        # Vérifier si le username existe déjà
+        cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
+        if cursor.fetchone():
+            return jsonify({'error': 'Ce nom d\'utilisateur existe déjà'}), 400
+        
+        # Vérifier si l'email existe déjà
+        cursor.execute('SELECT id FROM users WHERE email = ?', (email,))
+        if cursor.fetchone():
+            return jsonify({'error': 'Cette adresse email est déjà utilisée'}), 400
+        
+        cursor.execute('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)',
+                       (username, email, generate_password_hash(password)))
         db.commit()
         user_id = cursor.lastrowid
         session['user_id'] = user_id
         session['username'] = username
-        return jsonify({'success': True, 'username': username})
+        session['email'] = email
+        return jsonify({'success': True, 'username': username, 'email': email})
     except sqlite3.IntegrityError:
-        return jsonify({'error': 'Ce nom d’utilisateur existe déjà'}), 400
+        return jsonify({'error': 'Ce compte existe déjà'}), 400
     finally:
         db.close()
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """Connecte un utilisateur en vérifiant les identifiants."""
+    """Connecte un utilisateur avec email/username et mot de passe."""
     data = request.get_json()
-    username = data.get('username')
+    login_identifier = data.get('login')  # Peut être username ou email
     password = data.get('password')
 
-    if not username or not password:
-        return jsonify({'error': 'Nom d’utilisateur et mot de passe requis'}), 400
+    if not login_identifier or not password:
+        return jsonify({'error': 'Email et mot de passe requis'}), 400
 
     db = get_db()
     cursor = db.cursor()
-    cursor.execute('SELECT id, password_hash FROM users WHERE username = ?', (username,))
+    # Recherche par email OU username
+    cursor.execute('SELECT id, username, email, password_hash FROM users WHERE email = ? OR username = ?', 
+                   (login_identifier, login_identifier))
     user = cursor.fetchone()
     db.close()
 
     if user and check_password_hash(user['password_hash'], password):
         session['user_id'] = user['id']
-        session['username'] = username
-        return jsonify({'success': True, 'username': username})
+        session['username'] = user['username']
+        session['email'] = user['email']
+        return jsonify({'success': True, 'username': user['username'], 'email': user['email']})
     else:
         return jsonify({'error': 'Identifiants incorrects'}), 401
 
@@ -137,11 +189,11 @@ def logout():
 def me():
     """Vérifie si l'utilisateur est connecté et retourne ses infos."""
     if 'user_id' in session:
-        return jsonify({'authenticated': True, 'username': session['username']})
+        return jsonify({'authenticated': True, 'username': session['username'], 'email': session.get('email', '')})
     else:
         return jsonify({'authenticated': False})
 
-# --- API Gestion des Abonnements ---
+#API Gestion des Abonnements
 
 @app.route('/api/subscriptions', methods=['GET'])
 @login_required
@@ -149,7 +201,7 @@ def get_subscriptions():
     """Récupère tous les abonnements de l'utilisateur connecté."""
     db = get_db()
     cursor = db.cursor()
-    cursor.execute('SELECT id, name, price, cycle, icon, shared, next_billing_date FROM subscriptions WHERE user_id = ?',
+    cursor.execute('SELECT id, name, price, cycle, icon, shared, next_billing_date, category FROM subscriptions WHERE user_id = ?',
                    (session['user_id'],))
     rows = cursor.fetchall()
     db.close()
@@ -167,6 +219,7 @@ def add_subscription():
     icon = data.get('icon')
     shared = data.get('shared', 0)
     next_billing_date = data.get('next_billing_date')
+    category = data.get('category', 'other')
 
     if not name or price is None or not cycle:
         return jsonify({'error': 'Données incomplètes'}), 400
@@ -174,9 +227,9 @@ def add_subscription():
     db = get_db()
     cursor = db.cursor()
     cursor.execute('''
-        INSERT INTO subscriptions (user_id, name, price, cycle, icon, shared, next_billing_date)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (session['user_id'], name, price, cycle, icon, shared, next_billing_date))
+        INSERT INTO subscriptions (user_id, name, price, cycle, icon, shared, next_billing_date, category)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (session['user_id'], name, price, cycle, icon, shared, next_billing_date, category))
     db.commit()
     sub_id = cursor.lastrowid
     db.close()

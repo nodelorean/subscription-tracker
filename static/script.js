@@ -19,6 +19,9 @@ let selectedPreset = null;
 let currentCurrency = 'EUR';
 let currentLang = 'fr';
 
+// Filtre de catégorie actif
+let currentCategoryFilter = 'all';
+
 // CONFIGURATION DES DEVISES
 
 /**
@@ -122,6 +125,8 @@ const translations = {
         
         // Formulaire
         username: "Nom d'utilisateur",
+        email: "Email",
+        email_or_username: "Email ou nom d'utilisateur",
         password: "Mot de passe",
         presets: "Présélections",
         manual: "Manuel",
@@ -139,12 +144,29 @@ const translations = {
         or: "ou",
         browse: "Parcourir",
         icon_url: "URL de l'icône (optionnel)",
+        category: "Catégorie",
+        
+        // Catégories
+        cat_streaming: "Streaming",
+        cat_software: "Logiciels",
+        cat_gaming: "Gaming",
+        cat_fitness: "Fitness",
+        cat_cloud: "Cloud/Stockage",
+        cat_productivity: "Productivité",
+        cat_other: "Autre",
+        
+        // Chatbot
+        bot_name: "SubTrack Assistant",
+        bot_status: "En ligne",
+        bot_welcome: "Salut ! 👋 Je suis ton assistant SubTrack. Pose-moi des questions sur tes abonnements !",
+        bot_placeholder: "Pose ta question...",
         
         // États et messages
         no_sub: "Aucun abonnement",
         click_add: 'Cliquez sur "Ajouter" pour commencer',
         shared: "Partagé",
         delete_confirm: "Supprimer cet abonnement ?",
+        all_categories: "Toutes",
         
         // Dates
         in_days: "dans {n}j",
@@ -186,6 +208,8 @@ const translations = {
         total_month: "Total / Month",
         total_year: "Total / Year",
         username: "Username",
+        email: "Email",
+        email_or_username: "Email or username",
         password: "Password",
         presets: "Presets",
         manual: "Manual",
@@ -203,10 +227,28 @@ const translations = {
         or: "or",
         browse: "Browse",
         icon_url: "Icon URL (optional)",
+        category: "Category",
+        
+        // Categories
+        cat_streaming: "Streaming",
+        cat_software: "Software",
+        cat_gaming: "Gaming",
+        cat_fitness: "Fitness",
+        cat_cloud: "Cloud/Storage",
+        cat_productivity: "Productivity",
+        cat_other: "Other",
+        
+        // Chatbot
+        bot_name: "SubTrack Assistant",
+        bot_status: "Online",
+        bot_welcome: "Hi! 👋 I'm your SubTrack assistant. Ask me questions about your subscriptions!",
+        bot_placeholder: "Ask your question...",
+        
         no_sub: "No subscriptions",
         click_add: 'Click "Add" to get started',
         shared: "Shared",
         delete_confirm: "Delete this subscription?",
+        all_categories: "All",
         in_days: "in {n}d",
         today: "today",
         late: "late",
@@ -244,6 +286,8 @@ const translations = {
         total_month: "Total / Mes",
         total_year: "Total / Año",
         username: "Nombre de usuario",
+        email: "Email",
+        email_or_username: "Email o nombre de usuario",
         password: "Contraseña",
         presets: "Preselecciones",
         manual: "Manual",
@@ -261,10 +305,28 @@ const translations = {
         or: "o",
         browse: "Explorar",
         icon_url: "URL del icono (opcional)",
+        category: "Categoría",
+        
+        // Categorías
+        cat_streaming: "Streaming",
+        cat_software: "Software",
+        cat_gaming: "Gaming",
+        cat_fitness: "Fitness",
+        cat_cloud: "Cloud/Almacenamiento",
+        cat_productivity: "Productividad",
+        cat_other: "Otro",
+        
+        // Chatbot
+        bot_name: "Asistente SubTrack",
+        bot_status: "En línea",
+        bot_welcome: "¡Hola! 👋 Soy tu asistente SubTrack. ¡Hazme preguntas sobre tus suscripciones!",
+        bot_placeholder: "Haz tu pregunta...",
+        
         no_sub: "Sin suscripciones",
         click_add: 'Haz clic en "Añadir" para comenzar',
         shared: "Compartido",
         delete_confirm: "¿Eliminar esta suscripción?",
+        all_categories: "Todas",
         in_days: "en {n}d",
         today: "hoy",
         late: "atrasado",
@@ -421,102 +483,122 @@ const servicePresets = {
     'spotify': {
         name: 'Spotify',
         icon: 'https://happyneon.fr/cdn/shop/products/Spotify-Logo-Neon-Like-Sign-on.jpg?v=1747837856',
-        color: '#1DB954'
+        color: '#1DB954',
+        category: 'streaming'
     },
     'netflix': {
         name: 'Netflix',
         icon: 'https://img.icons8.com/liquid-glass-color/1200/netflix.jpg',
-        color: '#E50914'
+        color: '#E50914',
+        category: 'streaming'
     },
     'adobe': {
         name: 'Adobe Creative Cloud',
         icon: 'https://image.similarpng.com/file/similarpng/very-thumbnail/2020/06/Adobe-logo-transparent-background-PNG.png',
-        color: '#FF0000'
+        color: '#FF0000',
+        category: 'software'
     },
     'youtube': {
         name: 'YouTube Premium',
         icon: 'https://images.seeklogo.com/logo-png/36/2/youtube-premium-logo-png_seeklogo-364940.png',
-        color: '#FF0000'
+        color: '#FF0000',
+        category: 'streaming'
     },
     'disney': {
         name: 'Disney+',
         icon: 'https://m.media-amazon.com/images/I/719t3jd2NeL.png',
-        color: '#113CCF'
+        color: '#113CCF',
+        category: 'streaming'
     },
     'chatgpt': {
         name: 'ChatGPT Plus',
         icon: `https://upload.wikimedia.org/wikipedia/commons/1/13/ChatGPT-Logo.png`,
-        color: '#10A37F'
+        color: '#10A37F',
+        category: 'software'
     },
     'microsoft': {
         name: 'Microsoft 365',
         icon: 'https://x5h8w2v3.delivery.rocketcdn.me/wp-content/uploads/2024/11/Logo-Microsoft-365-Business.png',
-        color: '#00A4EF'
+        color: '#00A4EF',
+        category: 'software'
     },
     'apple': {
         name: 'Apple Music',
         icon: 'https://www.apple.com/newsroom/images/product/apple-music/apple_music-update_hero_08242021.jpg.news_app_ed.jpg',
-        color: '#FA243C'
+        color: '#FA243C',
+        category: 'streaming'
     },
     'prime': {
         name: 'Prime Video',
         icon: 'https://img.icons8.com/fluent/1200/amazon-prime-video.jpg',
-        color: '#00A8E1'
+        color: '#00A8E1',
+        category: 'streaming'
     },
     'gym': {
         name: 'Salle de sport',
         icon: `https://graphiste.com/blog/wp-content/uploads/sites/4/2022/08/b42b4c818c7f2a60793216c51460e8df.jpg`,
-        color: '#8b5cf6'
+        color: '#8b5cf6',
+        category: 'fitness'
     },
     'notion': {
         name: 'Notion',
         icon: `https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png`,
-        color: '#000000'
+        color: '#000000',
+        category: 'productivity'
     },
     'dropbox': {
         name: 'Dropbox',
         icon: 'https://www.logo.wine/a/logo/Dropbox_(service)/Dropbox_(service)-Icon-Logo.wine.svg',
-        color: '#0061FF'
+        color: '#0061FF',
+        category: 'cloud'
     },
     'google': {
         name: 'Google One',
         icon: `https://play-lh.googleusercontent.com/B5AENJqFOd91t5cWZLTQbVUm7iDWzYVM1n0Pe2RI_46dhlWMtVAUBioUvy4YMXWdwA`,
-        color: '#4285F4'
+        color: '#4285F4',
+        category: 'cloud'
     },
     'deezer': {
         name: 'Deezer',
         icon: 'https://play-lh.googleusercontent.com/F9uslCD68SA59MsRuLJ4vT0o1a6WccmFufSRtfCaIg12K45jySvUqOViLWNSURq-NXyE=w1024',
-        color: '#fe2da0'
+        color: '#fe2da0',
+        category: 'streaming'
     },
     'xbox': {
         name: 'Xbox Game Pass',
         icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/1280px-Xbox_one_logo.svg.png',
-        color: '#10ff10'
+        color: '#10ff10',
+        category: 'gaming'
     },
     'playstation': {
         name: 'PlayStation+',
         icon: 'https://logo-marque.com/wp-content/uploads/2020/11/PlayStation-Embleme.png',
-        color: '#003087'
+        color: '#003087',
+        category: 'gaming'
     },
     'strava': {
         name: 'Strava',
         icon: 'https://images.icon-icons.com/2108/PNG/512/strava_icon_130820.png',
-        color: '#FC4C02'
+        color: '#FC4C02',
+        category: 'fitness'
     },
     'headspace': {
         name: 'Headspace',
         icon: 'https://healthcenter.uga.edu/wp-content/uploads/sites/19/2022/09/headspace-1.jpg',
-        color: '#F47D30'
+        color: '#F47D30',
+        category: 'fitness'
     },
     'canal': {
         name: 'Canal+',
         icon: 'https://www.creads.com/wp-content/uploads/2021/05/google_avatar_canalplus.jpg',
-        color: '#000000'
+        color: '#000000',
+        category: 'streaming'
     },
     'nintendo': {
         name: 'Nintendo Online',
         icon: 'https://sm.ign.com/ign_fr/cover/n/nintendo-s/nintendo-switch-online_nbsp.jpg',
-        color: '#e60012'
+        color: '#e60012',
+        category: 'gaming'
     }
 };
 
@@ -942,7 +1024,6 @@ function updatePriceProjection() {
 
 function renderSubscriptions() {
     const grid = document.getElementById('subscriptionGrid');
-    const { monthlyTotal } = calculateTotals();
     
     if (subscriptions.length === 0) {
         grid.innerHTML = `<div class="empty-state"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg><h3>${t('no_sub')}</h3><p>${t('click_add')}</p></div>`;
@@ -951,7 +1032,20 @@ function renderSubscriptions() {
         return;
     }
 
-    const sortedSubs = [...subscriptions].sort((a, b) => getMonthlyPrice(b.price, b.cycle) - getMonthlyPrice(a.price, a.cycle));
+    // Filtrer par catégorie
+    const filteredSubs = currentCategoryFilter === 'all' 
+        ? subscriptions 
+        : subscriptions.filter(sub => (sub.category || 'other') === currentCategoryFilter);
+    
+    // Calculer le total mensuel des abonnements filtrés
+    const monthlyTotal = filteredSubs.reduce((sum, sub) => {
+        const monthly = getMonthlyPrice(sub.price, sub.cycle);
+        const sharedDiscount = sub.shared === 1 ? 0.5 : 1;
+        return sum + (monthly * sharedDiscount);
+    }, 0);
+    
+    // Trier par prix mensuel décroissant
+    const sortedSubs = [...filteredSubs].sort((a, b) => getMonthlyPrice(b.price, b.cycle) - getMonthlyPrice(a.price, a.cycle));
     
     grid.innerHTML = sortedSubs.map((sub, index) => {
         let iconHtml;
@@ -990,6 +1084,20 @@ function renderSubscriptions() {
             nextPaymentHtml = `<div class="card-next-payment"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>${dateStr} (${daysText})</span></div>`;
         }
 
+        // Catégorie
+        const category = sub.category || 'other';
+        const categoryColors = {
+            streaming: '#e11d48',
+            software: '#7c3aed',
+            gaming: '#2563eb',
+            fitness: '#059669',
+            cloud: '#0891b2',
+            productivity: '#d97706',
+            other: '#6b7280'
+        };
+        const categoryColor = categoryColors[category] || categoryColors.other;
+        const categoryLabel = t(`cat_${category}`) || category;
+
         return `
             <div class="subscription-card" data-id="${sub.id}" style="--card-accent: ${baseColor};">
                 <button class="card-delete" onclick="deleteSubscription(${sub.id}); event.stopPropagation();">
@@ -999,6 +1107,7 @@ function renderSubscriptions() {
                     <div class="card-icon ${isCustomUrl ? 'custom-icon' : ''}" style="background: ${isCustomUrl ? 'rgba(255,255,255,0.9)' : `linear-gradient(135deg, ${baseColor}, #333)`};">${iconHtml}</div>
                     <div class="card-badges">
                         ${isShared ? `<div class="card-badge shared-badge">${t('shared')}</div>` : ''}
+                        <div class="card-badge category-badge" style="background: ${categoryColor}22; color: ${categoryColor}; border: 1px solid ${categoryColor}44;">${categoryLabel}</div>
                         <div class="card-badge">${percentage}%</div>
                     </div>
                 </div>
@@ -1035,6 +1144,7 @@ async function checkAuth() {
         document.getElementById('registerBtn').style.display = 'none';
         document.getElementById('logoutBtn').style.display = 'inline-flex';
         document.getElementById('actionsBar').style.display = 'flex';
+        document.getElementById('categoryFilters').style.display = 'flex';
         document.getElementById('summaryBar').style.display = 'flex';
         loadSubscriptions();
     } else {
@@ -1046,6 +1156,7 @@ async function checkAuth() {
         document.getElementById('registerBtn').style.display = 'inline-flex';
         document.getElementById('logoutBtn').style.display = 'none';
         document.getElementById('actionsBar').style.display = 'none';
+        document.getElementById('categoryFilters').style.display = 'none';
         document.getElementById('summaryBar').style.display = 'none';
     }
 }
@@ -1061,7 +1172,7 @@ async function loadSubscriptions() {
     }
 }
 
-async function addSubscription(name, price, cycle, iconKey = null, shared = 0, nextBillingDate = null) {
+async function addSubscription(name, price, cycle, iconKey = null, shared = 0, nextBillingDate = null, category = 'other') {
     const parsedPrice = parseFloat(price);
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
         alert('Veuillez entrer un prix valide');
@@ -1070,7 +1181,7 @@ async function addSubscription(name, price, cycle, iconKey = null, shared = 0, n
     const response = await fetch('/api/subscriptions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, price: parsedPrice, cycle, icon: iconKey, shared: shared ? 1 : 0, next_billing_date: nextBillingDate })
+        body: JSON.stringify({ name, price: parsedPrice, cycle, icon: iconKey, shared: shared ? 1 : 0, next_billing_date: nextBillingDate, category })
     });
     if (response.ok) {
         loadSubscriptions();
@@ -1121,6 +1232,11 @@ window.selectPreset = function(presetKey) {
     document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('selected'));
     document.querySelector(`[data-preset="${presetKey}"]`)?.classList.add('selected');
     document.getElementById('presetServiceName').value = preset.name;
+    
+    // Auto-sélectionner la catégorie basée sur le preset
+    if (preset.category) {
+        document.getElementById('presetCategory').value = preset.category;
+    }
     
     const plans = servicePlans[presetKey];
     const planGroup = document.getElementById('presetPlanGroup');
@@ -1202,7 +1318,7 @@ function setupEventListeners() {
         const res = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: document.getElementById('loginUsername').value, password: document.getElementById('loginPassword').value })
+            body: JSON.stringify({ login: document.getElementById('loginInput').value, password: document.getElementById('loginPassword').value })
         });
         const data = await res.json();
         if (res.ok) { document.getElementById('loginModal').classList.remove('active'); checkAuth(); }
@@ -1216,7 +1332,11 @@ function setupEventListeners() {
         const res = await fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: document.getElementById('registerUsername').value, password: document.getElementById('registerPassword').value })
+            body: JSON.stringify({ 
+                username: document.getElementById('registerUsername').value, 
+                email: document.getElementById('registerEmail').value,
+                password: document.getElementById('registerPassword').value 
+            })
         });
         const data = await res.json();
         if (res.ok) { document.getElementById('registerModal').classList.remove('active'); checkAuth(); }
@@ -1234,6 +1354,16 @@ function setupEventListeners() {
     document.getElementById('closeImportModal').addEventListener('click', closeModal);
     document.querySelectorAll('.modal-overlay').forEach(overlay => overlay.addEventListener('click', closeModal));
 
+    // Filtres par catégorie
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategoryFilter = btn.dataset.category;
+            renderSubscriptions();
+        });
+    });
+
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1245,7 +1375,7 @@ function setupEventListeners() {
 
     document.getElementById('presetForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        addSubscription(document.getElementById('presetServiceName').value.trim(), document.getElementById('presetPrice').value, document.getElementById('presetBillingCycle').value, selectedPreset, document.getElementById('presetShared').checked, document.getElementById('presetNextDate').value || null);
+        addSubscription(document.getElementById('presetServiceName').value.trim(), document.getElementById('presetPrice').value, document.getElementById('presetBillingCycle').value, selectedPreset, document.getElementById('presetShared').checked, document.getElementById('presetNextDate').value || null, document.getElementById('presetCategory').value);
         selectedPreset = null;
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('selected'));
         document.getElementById('selectedPresetInfo').style.display = 'none';
@@ -1257,12 +1387,22 @@ function setupEventListeners() {
         e.preventDefault();
         const name = document.getElementById('serviceInput').value.trim();
         let iconKey = selectedPreset;
-        if (!iconKey && document.getElementById('iconUrl').value.trim()) iconKey = document.getElementById('iconUrl').value.trim();
-        else if (!iconKey) {
+        let detectedCategory = document.getElementById('category').value;
+        
+        if (!iconKey && document.getElementById('iconUrl').value.trim()) {
+            iconKey = document.getElementById('iconUrl').value.trim();
+        } else if (!iconKey) {
             const match = Object.entries(servicePresets).find(([k, p]) => p.name.toLowerCase() === name.toLowerCase());
-            if (match) iconKey = match[0];
+            if (match) {
+                iconKey = match[0];
+                // Auto-détecter la catégorie basée sur le preset trouvé
+                if (match[1].category) {
+                    detectedCategory = match[1].category;
+                    document.getElementById('category').value = detectedCategory;
+                }
+            }
         }
-        addSubscription(name, document.getElementById('price').value, document.getElementById('billingCycle').value, iconKey, document.getElementById('sharedSubscription').checked, document.getElementById('nextDate').value || null);
+        addSubscription(name, document.getElementById('price').value, document.getElementById('billingCycle').value, iconKey, document.getElementById('sharedSubscription').checked, document.getElementById('nextDate').value || null, detectedCategory);
     });
 
     const serviceInput = document.getElementById('serviceInput');
@@ -1283,8 +1423,15 @@ function setupEventListeners() {
             serviceDropdown.querySelectorAll('.datalist-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const key = this.dataset.preset;
-                    serviceInput.value = servicePresets[key].name;
+                    const preset = servicePresets[key];
+                    serviceInput.value = preset.name;
                     selectedPreset = key;
+                    
+                    // Auto-sélectionner la catégorie
+                    if (preset.category) {
+                        document.getElementById('category').value = preset.category;
+                    }
+                    
                     const plans = servicePlans[key];
                     if (plans && plans.length) {
                         planSelectorGroup.style.display = 'block';
@@ -1353,3 +1500,488 @@ function handleFile(file) {
     };
     reader.readAsText(file);
 }
+
+// ============================================================================
+// CHATBOT - Assistant virtuel
+// ============================================================================
+
+// Base de connaissances du bot
+const chatbotIntents = [
+    {
+        keywords: ['total', 'dépense', 'coût total', 'somme'],
+        handler: () => {
+            const { monthlyTotal, yearlyTotal } = calculateTotals();
+            const count = subscriptions.length;
+            return {
+                text: `Tu as ${count} abonnements qui te coûtent **${formatPrice(monthlyTotal)}/mois**, soit environ **${formatPrice(yearlyTotal)}/an**.`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['streaming', 'netflix', 'disney', 'spotify', 'vidéo', 'musique'],
+        handler: () => {
+            const streamingSubs = subscriptions.filter(s => (s.category || 'other') === 'streaming');
+            if (streamingSubs.length === 0) return { text: "Tu n'as pas d'abonnements streaming.", action: null };
+            const total = streamingSubs.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle), 0);
+            const names = streamingSubs.map(s => s.name).join(', ');
+            return {
+                text: `Tu as ${streamingSubs.length} service(s) streaming qui coûtent **${formatPrice(total)}/mois** : ${names}`,
+                action: { label: 'Voir streaming', filter: 'streaming' }
+            };
+        }
+    },
+    {
+        keywords: ['logiciel', 'software', 'adobe', 'microsoft', 'chatgpt', 'outils'],
+        handler: () => {
+            const softSubs = subscriptions.filter(s => (s.category || 'other') === 'software');
+            if (softSubs.length === 0) return { text: "Tu n'as pas d'abonnements logiciels.", action: null };
+            const total = softSubs.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle), 0);
+            return {
+                text: `Tu as ${softSubs.length} logiciel(s) qui coûtent **${formatPrice(total)}/mois**.`,
+                action: { label: 'Voir logiciels', filter: 'software' }
+            };
+        }
+    },
+    {
+        keywords: ['gaming', 'jeux', 'xbox', 'playstation', 'nintendo'],
+        handler: () => {
+            const gameSubs = subscriptions.filter(s => (s.category || 'other') === 'gaming');
+            if (gameSubs.length === 0) return { text: "Tu n'as pas d'abonnements gaming.", action: null };
+            const total = gameSubs.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle), 0);
+            return {
+                text: `Tu as ${gameSubs.length} abonnement(s) gaming qui coûtent **${formatPrice(total)}/mois**.`,
+                action: { label: 'Voir gaming', filter: 'gaming' }
+            };
+        }
+    },
+    {
+        keywords: ['fitness', 'sport', 'gym', 'strava', 'headspace'],
+        handler: () => {
+            const fitSubs = subscriptions.filter(s => (s.category || 'other') === 'fitness');
+            if (fitSubs.length === 0) return { text: "Tu n'as pas d'abonnements fitness.", action: null };
+            const total = fitSubs.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle), 0);
+            return {
+                text: `Tu as ${fitSubs.length} abonnement(s) fitness qui coûtent **${formatPrice(total)}/mois**.`,
+                action: { label: 'Voir fitness', filter: 'fitness' }
+            };
+        }
+    },
+    {
+        keywords: ['plus cher', 'plus chère', 'coûteux', 'maximum', 'max'],
+        handler: () => {
+            if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
+            const sorted = [...subscriptions].sort((a, b) => getMonthlyPrice(b.price, b.cycle) - getMonthlyPrice(a.price, a.cycle));
+            const most = sorted[0];
+            const price = getMonthlyPrice(most.price, most.cycle);
+            return {
+                text: `Ton abonnement le plus cher est **${most.name}** à **${formatPrice(price)}/mois**.`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['moins cher', 'moins chère', 'minimum', 'min', 'petit'],
+        handler: () => {
+            if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
+            const sorted = [...subscriptions].sort((a, b) => getMonthlyPrice(a.price, a.cycle) - getMonthlyPrice(b.price, b.cycle));
+            const cheapest = sorted[0];
+            const price = getMonthlyPrice(cheapest.price, cheapest.cycle);
+            return {
+                text: `Ton abonnement le moins cher est **${cheapest.name}** à **${formatPrice(price)}/mois**.`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['conseil', 'aide', 'tip', 'astuce', 'économie', 'réduire', 'diminuer'],
+        handler: () => {
+            const tips = [];
+            const { monthlyTotal } = calculateTotals();
+            const streamingCount = subscriptions.filter(s => (s.category || 'other') === 'streaming').length;
+            const sharedCount = subscriptions.filter(s => s.shared === 1).length;
+            
+            if (streamingCount >= 3) tips.push("Tu as beaucoup de services streaming. En partager un avec des amis pourrait t'économiser ~50% !");
+            if (sharedCount === 0) tips.push("Tu n'as aucun abonnement partagé. C'est une bonne façon de réduire tes coûts !");
+            if (monthlyTotal > 100) tips.push("Tu dépenses plus de 100€/mois. Pense à vérifier si tu utilises vraiment tous tes abonnements.");
+            if (monthlyTotal > 50) tips.push("Les abonnements annuels sont souvent -15% à -20%. Ça vaut le coup si tu gardes le service toute l'année !");
+            
+            if (tips.length === 0) tips.push("Tu gères bien tes abonnements ! Continue comme ça 🎉");
+            
+            return {
+                text: tips[Math.floor(Math.random() * tips.length)],
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['annuel', 'annuelle', 'par an', '/an', 'year'],
+        handler: () => {
+            const { yearlyTotal } = calculateTotals();
+            return {
+                text: `Tes abonnements te coûtent environ **${formatPrice(yearlyTotal)}/an**.`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['partagé', 'partager', 'shared', 'famille'],
+        handler: () => {
+            const sharedSubs = subscriptions.filter(s => s.shared === 1);
+            if (sharedSubs.length === 0) return { text: "Tu n'as aucun abonnement partagé. Tu pourrais économiser en partageant certains services !", action: null };
+            const savings = sharedSubs.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle) / 2, 0);
+            return {
+                text: `Tu as ${sharedSubs.length} abonnement(s) partagé(s) ce qui t'économise environ **${formatPrice(savings)}/mois** ! 🎉`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['salaire', 'pourcentage', '%', 'revenu', 'salaire minimum'],
+        handler: () => {
+            const { monthlyTotal } = calculateTotals();
+            const minWage = currencies[currentCurrency].minWageMonthly;
+            const percentage = ((monthlyTotal / minWage) * 100).toFixed(1);
+            return {
+                text: `Tes abonnements représentent **${percentage}%** de ton salaire minimum mensuel (${formatPrice(minWage)}).`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['prochain', 'paiement', 'échéance', 'quand', 'date'],
+        handler: () => {
+            const subsWithDates = subscriptions.filter(s => s.next_billing_date);
+            if (subsWithDates.length === 0) return { text: "Tu n'as pas de dates de paiement enregistrées.", action: null };
+            
+            const sorted = subsWithDates.sort((a, b) => new Date(a.next_billing_date) - new Date(b.next_billing_date));
+            const next = sorted[0];
+            const date = new Date(next.next_billing_date);
+            const today = new Date();
+            const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
+            
+            let timeText = diffDays > 0 ? `dans ${diffDays} jour(s)` : diffDays === 0 ? "aujourd'hui" : "en retard !";
+            
+            return {
+                text: `Ton prochain paiement est **${next.name}** ${timeText} (${date.toLocaleDateString('fr-FR')}).`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['conseille', 'garder', 'supprimer', 'utilise', 'utilisation', 'utile', 'inutile'],
+        handler: () => {
+            if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
+            
+            const tips = [];
+            const streamingSubs = subscriptions.filter(s => (s.category || 'other') === 'streaming');
+            const sharedSubs = subscriptions.filter(s => s.shared === 1);
+            const { monthlyTotal } = calculateTotals();
+            
+            // Analyse par catégorie
+            if (streamingSubs.length > 4) {
+                const expensiveStreaming = streamingSubs.sort((a, b) => b.price - a.price).slice(0, 2);
+                tips.push(`Tu as ${streamingSubs.length} services streaming. Tu pourrais garder seulement 2-3 et tourner entre eux. Les plus chers : ${expensiveStreaming.map(s => s.name).join(', ')}`);
+            }
+            
+            // Analyse des abonnements peu chers vs chers
+            const sorted = [...subscriptions].sort((a, b) => getMonthlyPrice(a.price, a.cycle) - getMonthlyPrice(b.price, b.cycle));
+            const cheapest = sorted.slice(0, 2);
+            const mostExpensive = sorted.slice(-2).reverse();
+            
+            tips.push(`Les moins chers (${cheapest.map(s => `${s.name}: ${formatPrice(getMonthlyPrice(s.price, s.cycle))}/mois`).join(', ')}) valent souvent le coup.`);
+            
+            if (monthlyTotal > 80) {
+                tips.push(`Avec ${formatPrice(monthlyTotal)}/mois, vérifie que tu utilises vraiment chaque service au moins 2x par semaine.`);
+            }
+            
+            if (sharedSubs.length === 0) {
+                tips.push(`Aucun abonnement partagé ! Tu pourrais économiser en partageant Netflix, Spotify Family ou Disney+.`);
+            }
+            
+            return {
+                text: tips.join('\n\n'),
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['réduire', 'économiser', 'économies', 'moins cher', 'diminuer', 'baisser', 'coûts', 'cout', 'couper', 'annuler'],
+        handler: () => {
+            if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
+            
+            const { monthlyTotal, yearlyTotal } = calculateTotals();
+            const tips = [];
+            let potentialSavings = 0;
+            
+            // Vérifier les abonnements partagés
+            const nonShared = subscriptions.filter(s => s.shared !== 1);
+            if (nonShared.length > 0) {
+                const sharedSavings = nonShared.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle) * 0.5, 0);
+                potentialSavings += sharedSavings;
+                tips.push(`🔄 **Partage tes abonnements** : Tu pourrais économiser ~${formatPrice(sharedSavings)}/mois en partageant avec ta famille/ami.`);
+            }
+            
+            // Vérifier les abonnements annuels vs mensuels
+            const monthlyOnly = subscriptions.filter(s => s.cycle === 'monthly');
+            if (monthlyOnly.length > 0) {
+                tips.push(`📅 **Passe à l'annuel** : Les abonnements annuels économisent 15-20% en moyenne.`);
+            }
+            
+            // Streaming multiples
+            const streamingSubs = subscriptions.filter(s => (s.category || 'other') === 'streaming');
+            if (streamingSubs.length >= 3) {
+                tips.push(`🎬 **Tourne tes streaming** : Au lieu de payer 3+ services, abonne-toi à 1-2 et tourne chaque mois.`);
+            }
+            
+            // Plans étudiants
+            tips.push(`🎓 **Plan étudiant** : Si tu es étudiant, beaucoup de services offrent -50% (Spotify, Apple Music, etc.)`);
+            
+            // Calculer le potentiel
+            tips.push(`\n💰 **Potentiel d'économie estimé** : ${formatPrice(potentialSavings + monthlyTotal * 0.15)}/mois (~${formatPrice((potentialSavings + monthlyTotal * 0.15) * 12)}/an)`);
+            
+            return {
+                text: tips.join('\n\n'),
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['5 ans', 'cinq ans', 'projection', 'futur', 'inflation', 'augmenter', 'hausse', 'combien dans', 'dici', "d'ici", 'paierais', 'coûtera', 'coutera', 'payerai', 'dans 5', 'dans 10', 'dans 3', 'dans 7', 'prochaines années', 'demain', 'combien je paie', 'combien je payerai', 'combien ça coûtera', 'futur proche', 'dans 2 ans', 'dans 15 ans', 'dans 20 ans'],
+        handler: (message) => {
+            if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
+            
+            const { monthlyTotal, yearlyTotal } = calculateTotals();
+            
+            // Taux d'inflation par catégorie
+            const inflationRates = {
+                streaming: 1.08,
+                software: 1.05,
+                gaming: 1.04,
+                fitness: 1.03,
+                cloud: 1.04,
+                productivity: 1.05,
+                other: 1.01
+            };
+            
+            // Calculer l'inflation moyenne pondérée
+            let totalWeightedInflation = 0;
+            let totalWeight = 0;
+            subscriptions.forEach(sub => {
+                const cat = sub.category || 'other';
+                const rate = inflationRates[cat] || 1.01;
+                const monthly = getMonthlyPrice(sub.price, sub.cycle);
+                totalWeightedInflation += monthly * rate;
+                totalWeight += monthly;
+            });
+            const avgInflation = totalWeight > 0 ? totalWeightedInflation / totalWeight : 1.05;
+            const inflationPercent = ((avgInflation - 1) * 100).toFixed(1);
+            
+            // Extraire le nombre d'années depuis le message
+            const yearMatch = message.match(/(\d+)\s*ans/);
+            const requestedYears = yearMatch ? parseInt(yearMatch[1]) : null;
+            
+            // Fonction pour calculer le prix dans X années
+            const calcYear = (years) => {
+                const total = monthlyTotal * 12 * Math.pow(avgInflation, years);
+                const increase = total - yearlyTotal;
+                return { total, increase };
+            };
+            
+            // Si un nombre d'années est spécifié, afficher une réponse ciblée
+            if (requestedYears && requestedYears > 0 && requestedYears <= 50) {
+                const { total, increase } = calcYear(requestedYears);
+                return {
+                    text: `📈 **Projection dans ${requestedYears} ans** (inflation ${inflationPercent}/an) :
+
+• **Aujourd'hui** : ${formatPrice(yearlyTotal)}/an
+• **Dans ${requestedYears} ans** : ~**${formatPrice(total)}**/an
+• **Augmentation** : +${formatPrice(increase)} (+${((increase/yearlyTotal)*100).toFixed(0)}%)
+
+💡 **Conseil** : Passe à l'annuel maintenant pour figer les prix !`,
+                    action: null
+                };
+            }
+            
+            // Sinon, afficher les projections standard (1, 3, 5, 10 ans)
+            const year1 = calcYear(1);
+            const year3 = calcYear(3);
+            const year5 = calcYear(5);
+            const year10 = calcYear(10);
+            
+            return {
+                text: `📈 **Projection avec inflation** (moyenne ${inflationPercent}/an) :
+
+• **Aujourd'hui** : ${formatPrice(yearlyTotal)}/an
+• **Dans 1 an** : ~${formatPrice(year1.total)} (+${formatPrice(year1.increase)})
+• **Dans 3 ans** : ~${formatPrice(year3.total)} (+${formatPrice(year3.increase)})
+• **Dans 5 ans** : ~${formatPrice(year5.total)} (+${formatPrice(year5.increase)})
+• **Dans 10 ans** : ~${formatPrice(year10.total)} (+${formatPrice(year10.increase)})
+
+💡 Dis-moi un nombre précis d'années pour un calcul exact !`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['bonjour', 'salut', 'hello', 'coucou', 'hey', 'help', 'aide'],
+        handler: () => {
+            return {
+                text: "Salut ! 👋 Pose-moi des questions sur tes abonnements. Tu peux me demander : le total, le plus cher, des conseils, comment réduire tes coûts, ou une projection dans le temps !",
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['merci', 'thanks', 'cool', 'super', 'parfait'],
+        handler: () => {
+            return {
+                text: "De rien ! 😊 N'hésite pas si tu as d'autres questions !",
+                action: null
+            };
+        }
+    }
+];
+
+// Fonction principale du chatbot
+function getChatbotResponse(userMessage) {
+    const message = userMessage.toLowerCase().trim();
+    
+    // Chercher l'intention correspondante
+    for (const intent of chatbotIntents) {
+        const match = intent.keywords.some(kw => message.includes(kw));
+        if (match) {
+            return intent.handler(message);
+        }
+    }
+    
+    // Réponse par défaut
+    return {
+        text: "Je ne suis pas sûr de comprendre 🤔 Essaie de me demander : le total, le plus cher, des conseils, ou une catégorie (streaming, logiciels, gaming...)",
+        action: null
+    };
+}
+
+// Ajouter un message au chat
+function addChatMessage(text, isUser = false, action = null) {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chatbot-message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+    // Convertir **texte** en gras
+    const formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    
+    let actionHtml = '';
+    if (action) {
+        actionHtml = `<button class="message-action" onclick="applyBotAction('${action.filter}')">${action.label}</button>`;
+    }
+    
+    messageDiv.innerHTML = `
+        <div class="message-bubble">
+            <span>${formattedText}</span>
+            ${actionHtml}
+        </div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Indicateur de frappe
+function showTypingIndicator() {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chatbot-message bot-message';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `
+        <div class="message-bubble">
+            <div class="typing-indicator">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    `;
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+}
+
+// Appliquer une action du bot
+window.applyBotAction = function(category) {
+    currentCategoryFilter = category;
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.category === category) btn.classList.add('active');
+    });
+    renderSubscriptions();
+    
+    // Feedback dans le chat
+    const catName = t(`cat_${category}`) || category;
+    addChatMessage(`✅ Filtre "${catName}" appliqué !`);
+};
+
+// Envoyer un message
+function sendChatMessage() {
+    const input = document.getElementById('chatbotInput');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    // Afficher le message utilisateur
+    addChatMessage(message, true);
+    input.value = '';
+    
+    // Indicateur de frappe
+    showTypingIndicator();
+    
+    // Simuler un délai de réflexion
+    setTimeout(() => {
+        hideTypingIndicator();
+        const response = getChatbotResponse(message);
+        addChatMessage(response.text, false, response.action);
+    }, 500 + Math.random() * 500);
+}
+
+// Initialisation du chatbot
+function initChatbot() {
+    const fab = document.getElementById('chatbotFab');
+    const window = document.getElementById('chatbotWindow');
+    const closeBtn = document.getElementById('chatbotClose');
+    const input = document.getElementById('chatbotInput');
+    const sendBtn = document.getElementById('chatbotSend');
+    const suggestions = document.querySelectorAll('.suggestion-btn');
+    
+    // Toggle fenêtre
+    fab.addEventListener('click', () => {
+        window.classList.toggle('active');
+        if (window.classList.contains('active')) {
+            input.focus();
+        }
+    });
+    
+    // Fermer
+    closeBtn.addEventListener('click', () => {
+        window.classList.remove('active');
+    });
+    
+    // Envoyer message
+    sendBtn.addEventListener('click', sendChatMessage);
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendChatMessage();
+    });
+    
+    // Suggestions
+    suggestions.forEach(btn => {
+        btn.addEventListener('click', () => {
+            input.value = btn.dataset.question;
+            sendChatMessage();
+        });
+    });
+}
+
+// Initialiser au chargement
+document.addEventListener('DOMContentLoaded', initChatbot);

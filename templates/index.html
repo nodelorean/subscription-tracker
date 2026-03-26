@@ -75,6 +75,18 @@
             </button>
         </div>
 
+        <!-- Filtres par catégorie -->
+        <div class="category-filters" id="categoryFilters" style="display: none;">
+            <button class="filter-btn active" data-category="all" data-i18n="all_categories">Toutes</button>
+            <button class="filter-btn" data-category="streaming" data-i18n="cat_streaming">Streaming</button>
+            <button class="filter-btn" data-category="software" data-i18n="cat_software">Logiciels</button>
+            <button class="filter-btn" data-category="gaming" data-i18n="cat_gaming">Gaming</button>
+            <button class="filter-btn" data-category="fitness" data-i18n="cat_fitness">Fitness</button>
+            <button class="filter-btn" data-category="cloud" data-i18n="cat_cloud">Cloud</button>
+            <button class="filter-btn" data-category="productivity" data-i18n="cat_productivity">Productivité</button>
+            <button class="filter-btn" data-category="other" data-i18n="cat_other">Autre</button>
+        </div>
+
         <main class="bento-grid" id="subscriptionGrid"></main>
 
         <section class="opportunity-section" id="opportunitySection">
@@ -137,8 +149,8 @@
             </div>
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginUsername" data-i18n="username">Nom d'utilisateur</label>
-                    <input type="text" id="loginUsername" placeholder="ex: johndoe" required>
+                    <label for="loginInput" data-i18n="email_or_username">Email ou nom d'utilisateur</label>
+                    <input type="text" id="loginInput" placeholder="ex: johndoe ou john@gmail.com" required>
                 </div>
                 <div class="form-group">
                     <label for="loginPassword" data-i18n="password">Mot de passe</label>
@@ -167,6 +179,10 @@
                 <div class="form-group">
                     <label for="registerUsername" data-i18n="username">Nom d'utilisateur</label>
                     <input type="text" id="registerUsername" placeholder="ex: johndoe" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail" data-i18n="email">Email</label>
+                    <input type="email" id="registerEmail" placeholder="ex: john@gmail.com" required>
                 </div>
                 <div class="form-group">
                     <label for="registerPassword" data-i18n="password">Mot de passe</label>
@@ -206,6 +222,18 @@
                         <div class="form-group" id="presetPlanGroup">
                             <label data-i18n="choose_plan">Choisir l'offre</label>
                             <div class="plan-selector" id="presetPlanSelector"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="presetCategory" data-i18n="category">Catégorie</label>
+                            <select id="presetCategory" required>
+                                <option value="streaming" data-i18n="cat_streaming">Streaming</option>
+                                <option value="software" data-i18n="cat_software">Logiciels</option>
+                                <option value="gaming" data-i18n="cat_gaming">Gaming</option>
+                                <option value="fitness" data-i18n="cat_fitness">Fitness</option>
+                                <option value="cloud" data-i18n="cat_cloud">Cloud/Stockage</option>
+                                <option value="productivity" data-i18n="cat_productivity">Productivité</option>
+                                <option value="other" data-i18n="cat_other">Autre</option>
+                            </select>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
@@ -249,6 +277,18 @@
                     <div class="form-group" id="planSelectorGroup" style="display: none;">
                         <label data-i18n="choose_plan">Choisir l'offre</label>
                         <div class="plan-selector" id="planSelector"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" data-i18n="category">Catégorie</label>
+                        <select id="category" required>
+                            <option value="streaming" data-i18n="cat_streaming">Streaming</option>
+                            <option value="software" data-i18n="cat_software">Logiciels</option>
+                            <option value="gaming" data-i18n="cat_gaming">Gaming</option>
+                            <option value="fitness" data-i18n="cat_fitness">Fitness</option>
+                            <option value="cloud" data-i18n="cat_cloud">Cloud/Stockage</option>
+                            <option value="productivity" data-i18n="cat_productivity">Productivité</option>
+                            <option value="other" data-i18n="cat_other">Autre</option>
+                        </select>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -314,5 +354,58 @@
             </div>
         </div>
     </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-header-info">
+                    <div class="chatbot-avatar-mini">
+                        <img src="https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_da068100ed0cb0af50290dfa50357b0f/ryne-ai.png" alt="Bot">
+                    </div>
+                    <div>
+                        <div class="chatbot-title" data-i18n="bot_name">SubTrack Assistant</div>
+                        <div class="chatbot-status" data-i18n="bot_status">En ligne</div>
+                    </div>
+                </div>
+                <button class="chatbot-close" id="chatbotClose">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="chatbot-message bot-message">
+                    <div class="message-avatar">
+                        <img src="https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_da068100ed0cb0af50290dfa50357b0f/ryne-ai.png" alt="Bot">
+                    </div>
+                    <div class="message-bubble">
+                        <span data-i18n="bot_welcome">Salut ! 👋 Je suis ton assistant SubTrack. Pose-moi des questions sur tes abonnements !</span>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-suggestions" id="chatbotSuggestions">
+                <button class="suggestion-btn" data-question="combien je dépense en tout ?">Total</button>
+                <button class="suggestion-btn" data-question="quel est mon plus cher ?">Plus cher</button>
+                <button class="suggestion-btn" data-question="comment réduire mes coûts ?">Économies</button>
+                <button class="suggestion-btn" data-question="combien dans 5 ans avec inflation ?">Projection 5 ans</button>
+            </div>
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbotInput" data-i18n-placeholder="bot_placeholder" placeholder="Pose ta question...">
+                <button class="chatbot-send" id="chatbotSend">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <button class="chatbot-fab" id="chatbotFab">
+            <img class="fab-robot-img" src="https://images.g2crowd.com/uploads/product/image/social_landscape/social_landscape_da068100ed0cb0af50290dfa50357b0f/ryne-ai.png" alt="AI Assistant">
+            <span class="fab-pulse"></span>
+        </button>
+    </div>
+
 </body>
 </html>
