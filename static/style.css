@@ -264,8 +264,12 @@ body {
 /* Catégorie badge sur les cartes */
 .category-badge {
     font-size: 10px !important;
-    padding: 2px 8px !important;
+    padding: 4px 10px !important;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 /* Grille Bento */
@@ -377,12 +381,17 @@ body {
     font-weight: 600;
     color: var(--text-secondary);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 
 .card-badges {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 .shared-badge {
