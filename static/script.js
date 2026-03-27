@@ -1473,17 +1473,66 @@ function setupEventListeners() {
 }
 
 // CSV Import
+// Mapping des catégories CSV vers nos catégories internes
+const csvCategoryMap = {
+    'streaming': 'streaming',
+    'musique': 'streaming',
+    'music': 'streaming',
+    'video': 'streaming',
+    'logiciel': 'software',
+    'software': 'software',
+    'gaming': 'gaming',
+    'jeux': 'gaming',
+    'games': 'gaming',
+    'fitness': 'fitness',
+    'sport': 'fitness',
+    'cloud': 'cloud',
+    'storage': 'cloud',
+    'stockage': 'cloud',
+    'productivity': 'productivity',
+    'productivité': 'productivity',
+    'other': 'other',
+    'autre': 'other'
+};
+
+// Normaliser le nom de catégorie
+function normalizeCategory(cat) {
+    if (!cat) return 'other';
+    const normalized = cat.toLowerCase().trim();
+    return csvCategoryMap[normalized] || 'other';
+}
+
 function parseCSV(csvText) {
     const results = [];
-    csvText.trim().split('\n').forEach(line => {
-        const parts = line.split(',').map(p => p.trim());
+    const lines = csvText.trim().split('\n');
+    
+    // Détecter les colonnes depuis l'en-tête
+    const headers = lines[0].toLowerCase().split(',').map(h => h.trim());
+    const nameIdx = headers.findIndex(h => h.includes('name') || h.includes('nom') || h.includes('service'));
+    const priceIdx = headers.findIndex(h => h.includes('price') || h.includes('prix'));
+    const cycleIdx = headers.findIndex(h => h.includes('cycle') || h.includes('billing') || h.includes('facturation'));
+    const categoryIdx = headers.findIndex(h => h.includes('category') || h.includes('catégorie'));
+    const dateIdx = headers.findIndex(h => h.includes('date') || h.includes('next') || h.includes('prochain'));
+    
+    // Si pas d'en-tête détecté, utiliser l'ordre par défaut
+    const useDefaultOrder = nameIdx === -1;
+    
+    // Parcourir les lignes de données (commencer à 1 pour sauter l'en-tête)
+    for (let i = 1; i < lines.length; i++) {
+        const parts = lines[i].split(',').map(p => p.trim());
         if (parts.length >= 2) {
-            const name = parts[0];
-            const price = parseFloat(parts[1]);
-            const cycle = parts[2]?.toLowerCase().includes('year') ? 'yearly' : 'monthly';
-            if (name && !isNaN(price)) results.push({ name, price, cycle });
+            const name = useDefaultOrder ? parts[0] : parts[nameIdx];
+            const price = parseFloat(useDefaultOrder ? parts[1] : parts[priceIdx]);
+            const cycleRaw = useDefaultOrder ? (parts[2] || '') : (parts[cycleIdx] || '');
+            const cycle = cycleRaw.toLowerCase().includes('year') ? 'yearly' : 'monthly';
+            const category = useDefaultOrder ? normalizeCategory(parts[3]) : normalizeCategory(parts[categoryIdx]);
+            const nextDate = useDefaultOrder ? (parts[4] || null) : (parts[dateIdx] || null);
+            
+            if (name && !isNaN(price)) {
+                results.push({ name, price, cycle, category, nextBillingDate: nextDate });
+            }
         }
-    });
+    }
     return { results };
 }
 
@@ -1494,7 +1543,7 @@ function handleFile(file) {
         if (results.length > 0) {
             results.forEach(item => {
                 const iconKey = Object.keys(servicePresets).find(k => servicePresets[k].name.toLowerCase() === item.name.toLowerCase());
-                addSubscription(item.name, item.price, item.cycle, iconKey);
+                addSubscription(item.name, item.price, item.cycle, iconKey, 0, item.nextBillingDate, item.category);
             });
             closeModal();
         } else {
