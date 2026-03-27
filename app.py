@@ -21,7 +21,7 @@ def get_db():
     return conn
 
 def init_db():
-    """Initialise la base de données en créant les tables si elles n'existent pas."""
+    "Initialise la base de données en créant les tables si elles n'existent pas."
     with app.app_context():
         db = get_db()
         cursor = db.cursor()
@@ -75,7 +75,7 @@ init_db()
 
 #Validation d'email
 def is_valid_email(email):
-    """Vérifie si l'adresse email a un format valide."""
+    "Vérifie si l'adresse email a un format valide."
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     if not re.match(pattern, email):
         return False
@@ -98,7 +98,7 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    """Affiche la page d'accueil (template HTML)."""
+    "Affiche la page d'accueil (template HTML)."
     return render_template('index.html')
 
 #API Authentification
@@ -155,7 +155,7 @@ def register():
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    """Connecte un utilisateur avec email/username et mot de passe."""
+    "Connecte un utilisateur avec email/username et mot de passe."
     data = request.get_json()
     login_identifier = data.get('login')  # Peut être username ou email
     password = data.get('password')
@@ -187,7 +187,7 @@ def logout():
 
 @app.route('/api/me', methods=['GET'])
 def me():
-    """Vérifie si l'utilisateur est connecté et retourne ses infos."""
+    "Vérifie si l'utilisateur est connecté et retourne ses infos."
     if 'user_id' in session:
         return jsonify({'authenticated': True, 'username': session['username'], 'email': session.get('email', '')})
     else:
@@ -238,7 +238,7 @@ def add_subscription():
 @app.route('/api/subscriptions/<int:sub_id>', methods=['DELETE'])
 @login_required
 def delete_subscription(sub_id):
-    """Supprime un abonnement spécifique (seulement si appartient à l'utilisateur)."""
+    "Supprime un abonnement spécifique (seulement si appartient à l'utilisateur)."
     db = get_db()
     cursor = db.cursor()
     cursor.execute('DELETE FROM subscriptions WHERE id = ? AND user_id = ?',

@@ -1146,6 +1146,7 @@ async function checkAuth() {
         document.getElementById('actionsBar').style.display = 'flex';
         document.getElementById('categoryFilters').style.display = 'flex';
         document.getElementById('summaryBar').style.display = 'flex';
+        document.getElementById('chatbotContainer').style.display = 'block';
         loadSubscriptions();
     } else {
         loggedOutContainer.classList.add('active');
@@ -1158,6 +1159,8 @@ async function checkAuth() {
         document.getElementById('actionsBar').style.display = 'none';
         document.getElementById('categoryFilters').style.display = 'none';
         document.getElementById('summaryBar').style.display = 'none';
+        document.getElementById('chatbotContainer').style.display = 'none';
+        document.getElementById('chatbotWindow').classList.remove('active');
     }
 }
 
@@ -1746,7 +1749,7 @@ const chatbotIntents = [
             };
         }
     },
-    {
+    {//petit robot ( ia on peut dire) qui répond a quelque questions cibles 
         keywords: ['5 ans', 'cinq ans', 'projection', 'futur', 'inflation', 'augmenter', 'hausse', 'combien dans', 'dici', "d'ici", 'paierais', 'coûtera', 'coutera', 'payerai', 'dans 5', 'dans 10', 'dans 3', 'dans 7', 'prochaines années', 'demain', 'combien je paie', 'combien je payerai', 'combien ça coûtera', 'futur proche', 'dans 2 ans', 'dans 15 ans', 'dans 20 ans'],
         handler: (message) => {
             if (subscriptions.length === 0) return { text: "Tu n'as pas encore d'abonnements.", action: null };
