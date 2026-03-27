@@ -98,8 +98,13 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    "Affiche la page d'accueil (template HTML)."
+    """Affiche la page d'accueil (template HTML)."""
     return render_template('index.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    """Retourne une réponse vide pour le favicon (évite le 404)."""
+    return '', 204
 
 #API Authentification
 
