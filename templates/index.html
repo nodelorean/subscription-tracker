@@ -150,7 +150,7 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label for="loginInput" data-i18n="email_or_username">Email ou nom d'utilisateur</label>
-                    <input type="text" id="loginInput" placeholder="ex: johndoe ou john@gmail.com" required>
+                    <input type="text" id="loginInput" placeholder="ex: Alice ou Alice@gmail.com" required>
                 </div>
                 <div class="form-group">
                     <label for="loginPassword" data-i18n="password">Mot de passe</label>
@@ -386,10 +386,15 @@
                 </div>
             </div>
             <div class="chatbot-suggestions" id="chatbotSuggestions">
-                <button class="suggestion-btn" data-question="combien je dépense en tout ?">Total</button>
-                <button class="suggestion-btn" data-question="quel est mon plus cher ?">Plus cher</button>
-                <button class="suggestion-btn" data-question="comment réduire mes coûts ?">Économies</button>
-                <button class="suggestion-btn" data-question="combien dans 5 ans avec inflation ?">Projection 5 ans</button>
+                <button class="suggestion-btn help-btn" data-question="que peux tu faire ?">🤖 Questions disponibles</button>
+                <button class="suggestion-btn" data-question="combien je dépense en tout ?">💰 Total mensuel</button>
+                <button class="suggestion-btn" data-question="quel est mon plus cher ?">📈 Plus cher</button>
+                <button class="suggestion-btn" data-question="mes abonnements streaming">🎬 Streaming</button>
+                <button class="suggestion-btn" data-question="comment réduire mes coûts ?">💡 Économies</button>
+                <button class="suggestion-btn" data-question="que me conseille tu de garder ?">✅ Conseils</button>
+                <button class="suggestion-btn" data-question="combien dans 10 ans ?">📊 Projection</button>
+                <button class="suggestion-btn" data-question="mes abonnements partagés">👥 Partagés</button>
+                <button class="suggestion-btn" data-question="prochain paiement">📅 Prochain paiement</button>
             </div>
             <div class="chatbot-input-area">
                 <input type="text" id="chatbotInput" data-i18n-placeholder="bot_placeholder" placeholder="Pose ta question...">

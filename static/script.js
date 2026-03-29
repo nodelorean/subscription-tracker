@@ -1646,7 +1646,7 @@ const chatbotIntents = [
         }
     },
     {
-        keywords: ['conseil', 'aide', 'tip', 'astuce', 'économie', 'réduire', 'diminuer'],
+        keywords: ['conseil', 'tip', 'astuce', 'économie', 'réduire', 'diminuer'],
         handler: () => {
             const tips = [];
             const { monthlyTotal } = calculateTotals();
@@ -1876,10 +1876,39 @@ const chatbotIntents = [
         }
     },
     {
-        keywords: ['bonjour', 'salut', 'hello', 'coucou', 'hey', 'help', 'aide'],
+        keywords: ['comment je peux vous aider', 'comment je peux aider', 'que peux tu faire', 'que savez tu faire', 'tes capacités', 'tes fonctions', 'liste des questions', 'questions disponibles'],
         handler: () => {
             return {
-                text: "Salut ! 👋 Pose-moi des questions sur tes abonnements. Tu peux me demander : le total, le plus cher, des conseils, comment réduire tes coûts, ou une projection dans le temps !",
+                text: `🤖 **Je peux répondre à ces questions :**
+
+**📊 Statistiques**
+• "Combien je dépense en tout ?"
+• "Quel est mon plus cher ?"
+• "Quel est le moins cher ?"
+• "Combien en streaming ?" (ou logiciels, gaming, fitness...)
+
+**💡 Conseils**
+• "Que me conseilles-tu de garder ?"
+• "Comment réduire mes coûts ?"
+
+**📈 Projections**
+• "Combien dans 5 ans avec inflation ?"
+• "Combien je paierais dans 10 ans ?"
+
+**👥 Infos**
+• "Mes abonnements partagés"
+• "Prochain paiement"
+
+Tape ta question ou clique sur un bouton ci-dessous !`,
+                action: null
+            };
+        }
+    },
+    {
+        keywords: ['bonjour', 'salut', 'hello', 'coucou', 'hey'],
+        handler: () => {
+            return {
+                text: "Salut ! 👋 Pose-moi une question sur tes abonnements ou clique sur les suggestions ci-dessous !",
                 action: null
             };
         }
