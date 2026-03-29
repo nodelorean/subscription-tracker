@@ -657,8 +657,8 @@ function updateSummary() {
 // TAUX D'INFLATION PAR CATEGORIE DE SERVICE
 
 /**
- * Taux d'inflation annuel par catégorie de service
- * Basé sur les hausses historiques observées par secteur
+Taux d'inflation annuel par catégorie de service
+Basé sur les hausses historiques observées par secteur
  */
 const inflationRates = {
     streaming: 0.08,      // 8% - Services de streaming vidéo/musique (Netflix, Spotify, etc.)
@@ -670,9 +670,9 @@ const inflationRates = {
 };
 
 /**
- * Détermine le taux d'inflation applicable à un abonnement donné
- * @param {Object} sub - Objet abonnement contenant name et icon
- * @returns {number} - Taux d'inflation annuel (ex: 0.08 pour 8%)
+ Détermine le taux d'inflation applicable à un abonnement donné
+ @param {Object} sub - Objet abonnement contenant name et icon
+ @returns {number} - Taux d'inflation annuel (ex: 0.08 pour 8%)
  */
 function getInflationRate(sub) {
     const name = (sub.name || '').toLowerCase();
@@ -719,9 +719,9 @@ function getInflationRate(sub) {
     return inflationRates.other;
 }
 
-// ============================================================================
+
 // ANALYSE D'OPPORTUNITE
-// ============================================================================
+
 
 /**
  * Met à jour la section d'analyse d'opportunité
@@ -894,8 +894,13 @@ function updateStreamingAnalyzer() {
 
 
 // PROJECTION DE PRIX
-
-
+/*
+ Affiche un graphique projetant l'évolution des prix des abonnements sur 12 mois
+ en tenant compte de l'inflation par catégorie (streaming +8%, software +5%, etc.)
+ Le graphique montre deux courbes :
+ - Courbe bleue en pointillés : prix actuel (constant)
+ - Courbe rouge : prix projeté avec inflation cumulée
+ */
 function updatePriceProjection() {
     const section = document.getElementById('projectionSection');
     const canvas = document.getElementById('projectionChart');
@@ -1553,9 +1558,7 @@ function handleFile(file) {
     reader.readAsText(file);
 }
 
-// ============================================================================
 // CHATBOT - Assistant virtuel
-// ============================================================================
 
 // Base de connaissances du bot
 const chatbotIntents = [
@@ -1771,26 +1774,26 @@ const chatbotIntents = [
             if (nonShared.length > 0) {
                 const sharedSavings = nonShared.reduce((sum, s) => sum + getMonthlyPrice(s.price, s.cycle) * 0.5, 0);
                 potentialSavings += sharedSavings;
-                tips.push(`🔄 **Partage tes abonnements** : Tu pourrais économiser ~${formatPrice(sharedSavings)}/mois en partageant avec ta famille/ami.`);
+                tips.push(` **Partage tes abonnements** : Tu pourrais économiser ~${formatPrice(sharedSavings)}/mois en partageant avec ta famille/ami.`);
             }
             
             // Vérifier les abonnements annuels vs mensuels
             const monthlyOnly = subscriptions.filter(s => s.cycle === 'monthly');
             if (monthlyOnly.length > 0) {
-                tips.push(`📅 **Passe à l'annuel** : Les abonnements annuels économisent 15-20% en moyenne.`);
+                tips.push(` **Passe à l'annuel** : Les abonnements annuels économisent 15-20% en moyenne.`);
             }
             
             // Streaming multiples
             const streamingSubs = subscriptions.filter(s => (s.category || 'other') === 'streaming');
             if (streamingSubs.length >= 3) {
-                tips.push(`🎬 **Tourne tes streaming** : Au lieu de payer 3+ services, abonne-toi à 1-2 et tourne chaque mois.`);
+                tips.push(` **Tourne tes streaming** : Au lieu de payer 3+ services, abonne-toi à 1-2 et tourne chaque mois.`);
             }
             
             // Plans étudiants
-            tips.push(`🎓 **Plan étudiant** : Si tu es étudiant, beaucoup de services offrent -50% (Spotify, Apple Music, etc.)`);
+            tips.push(` **Plan étudiant** : Si tu es étudiant, beaucoup de services offrent -50% (Spotify, Apple Music, etc.)`);
             
             // Calculer le potentiel
-            tips.push(`\n💰 **Potentiel d'économie estimé** : ${formatPrice(potentialSavings + monthlyTotal * 0.15)}/mois (~${formatPrice((potentialSavings + monthlyTotal * 0.15) * 12)}/an)`);
+            tips.push(`\n **Potentiel d'économie estimé** : ${formatPrice(potentialSavings + monthlyTotal * 0.15)}/mois (~${formatPrice((potentialSavings + monthlyTotal * 0.15) * 12)}/an)`);
             
             return {
                 text: tips.join('\n\n'),
@@ -1844,7 +1847,7 @@ const chatbotIntents = [
             if (requestedYears && requestedYears > 0 && requestedYears <= 50) {
                 const { total, increase } = calcYear(requestedYears);
                 return {
-                    text: `📈 **Projection dans ${requestedYears} ans** (inflation ${inflationPercent}/an) :
+                    text: ` **Projection dans ${requestedYears} ans** (inflation ${inflationPercent}/an) :
 
 • **Aujourd'hui** : ${formatPrice(yearlyTotal)}/an
 • **Dans ${requestedYears} ans** : ~**${formatPrice(total)}**/an
@@ -1862,7 +1865,7 @@ const chatbotIntents = [
             const year10 = calcYear(10);
             
             return {
-                text: `📈 **Projection avec inflation** (moyenne ${inflationPercent}/an) :
+                text: ` **Projection avec inflation** (moyenne ${inflationPercent}/an) :
 
 • **Aujourd'hui** : ${formatPrice(yearlyTotal)}/an
 • **Dans 1 an** : ~${formatPrice(year1.total)} (+${formatPrice(year1.increase)})
@@ -1879,7 +1882,7 @@ const chatbotIntents = [
         keywords: ['comment je peux vous aider', 'comment je peux aider', 'que peux tu faire', 'que savez tu faire', 'tes capacités', 'tes fonctions', 'liste des questions', 'questions disponibles'],
         handler: () => {
             return {
-                text: `🤖 **Je peux répondre à ces questions :**
+                text: ` **Je peux répondre à ces questions :**
 
 **📊 Statistiques**
 • "Combien je dépense en tout ?"
@@ -1938,7 +1941,7 @@ function getChatbotResponse(userMessage) {
     
     // Réponse par défaut
     return {
-        text: "Je ne suis pas sûr de comprendre 🤔 Essaie de me demander : le total, le plus cher, des conseils, ou une catégorie (streaming, logiciels, gaming...)",
+        text: "Je ne suis pas sûr de comprendre , Essaie de me demander : le total, le plus cher, des conseils, ou une catégorie (streaming, logiciels, gaming...)",
         action: null
     };
 }
@@ -2003,7 +2006,7 @@ window.applyBotAction = function(category) {
     
     // Feedback dans le chat
     const catName = t(`cat_${category}`) || category;
-    addChatMessage(`✅ Filtre "${catName}" appliqué !`);
+    addChatMessage(` Filtre "${catName}" appliqué !`);
 };
 
 // Envoyer un message
