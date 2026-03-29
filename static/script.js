@@ -104,7 +104,9 @@ const translations = {
         register: "Inscription",
         logout: "Déconnexion",
         do_login: "Se connecter",
-        do_register: "S'inscrire",
+        do_register: "Créer mon compte",
+        login_title: "Bienvenue",
+        register_title: "Créer un compte",
         
         // Actions principales
         add_sub: "Ajouter un abonnement",
@@ -195,7 +197,9 @@ const translations = {
         register: "Sign up",
         logout: "Logout",
         do_login: "Log in",
-        do_register: "Sign up",
+        do_register: "Create account",
+        login_title: "Welcome back",
+        register_title: "Create account",
         add_sub: "Add subscription",
         import_csv: "Import CSV",
         opportunity_title: "Opportunity analysis",
@@ -273,7 +277,9 @@ const translations = {
         register: "Registrarse",
         logout: "Cerrar sesión",
         do_login: "Iniciar sesión",
-        do_register: "Registrarse",
+        do_register: "Crear cuenta",
+        login_title: "Bienvenido",
+        register_title: "Crear cuenta",
         add_sub: "Añadir suscripción",
         import_csv: "Importar CSV",
         opportunity_title: "Análisis de oportunidad",
@@ -602,9 +608,9 @@ const servicePresets = {
     }
 };
 
-// ============================================================================
+// 
 // CALCULS DES TOTAUX
-// ============================================================================
+// 
 
 /**
  * Calcule le prix mensuel à partir du prix stocké et du cycle de facturation

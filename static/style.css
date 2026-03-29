@@ -695,6 +695,152 @@ body {
     background: rgba(255, 255, 255, 0.1);
 }
 
+/*AUTH MODALS (Apple Style) */
+#loginModal .modal-content,
+#registerModal .modal-content {
+    max-width: 400px;
+    padding: 40px;
+    text-align: center;
+    background: rgba(30, 30, 32, 0.95);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#loginModal .modal-header,
+#registerModal .modal-header {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+#loginModal .modal-header h2,
+#registerModal .modal-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4px;
+}
+
+#loginModal .modal-close,
+#registerModal .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 30px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+}
+
+/* Auth styling */
+#loginModal .form-group,
+#registerModal .form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+#loginModal .form-group label,
+#registerModal .form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#loginModal .form-group input,
+#registerModal .form-group input {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    font-size: 16px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+#loginModal .form-group input::placeholder,
+#registerModal .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+#loginModal .form-group input:focus,
+#registerModal .form-group input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+/* Auth button */
+#loginModal .btn-primary,
+#registerModal .btn-primary {
+    width: 100%;
+    padding: 16px 24px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #8B5CF6, #6D28D9);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+}
+
+#loginModal .btn-primary:hover,
+#registerModal .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);
+}
+
+#loginModal .btn-primary:active,
+#registerModal .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Error message */
+#loginModal .form-error,
+#registerModal .form-error {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 12px;
+    color: #f87171;
+    font-size: 14px;
+}
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0;
+    gap: 16px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-divider span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
 /* Onglets */
 .modal-tabs {
     display: flex;
@@ -1599,7 +1745,7 @@ body {
     backdrop-filter: blur(60px);
 }
 
-/* ==================== ANALYSEUR DE STREAMING ==================== */
+/*ANALYSEUR DE STREAMING */
 
 .streaming-section {
     margin-bottom: 48px;
@@ -1759,7 +1905,7 @@ body {
     color: #32D74B;
 }
 
-/* ==================== PROJECTION DE PRIX ==================== */
+/* PROJECTION DE PRIX */
 
 .projection-section {
     margin-bottom: 48px;
@@ -1796,7 +1942,7 @@ body {
     text-align: right;
 }
 
-/* ==================== CHATBOT ==================== */
+/* CHATBOT */
 
 .chatbot-container {
     position: fixed;
@@ -1805,7 +1951,7 @@ body {
     z-index: 1000;
 }
 
-/* FAB - Floating Action Button (Robot) */
+/* Bouton flotant du bot (Robot) */
 .chatbot-fab {
     width: 64px;
     height: 64px;
@@ -1871,16 +2017,7 @@ body {
     object-fit: cover;
 }
 
-/* Old CSS Robot (kept for reference but not used) */
-.fab-robot {
-    display: none;
-}
-    border-radius: 2px;
-    top: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    box-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
-}
+
 
 .robot-antenna::after {
     content: '';
