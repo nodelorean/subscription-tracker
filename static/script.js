@@ -35,20 +35,20 @@ const currencies = {
     EUR: { 
         symbol: '€', 
         rate: 1,
-        minWageHourly: 11.27,
-        minWageMonthly: 1766.92
+        minWageHourly: 12.02,
+        minWageMonthly: 1823.03
     },
     USD: { 
         symbol: '$', 
         rate: 1.08,
         minWageHourly: 7.25,
-        minWageMonthly: 1257.33
+        minWageMonthly: 1256
     },
     GBP: { 
         symbol: '£', 
         rate: 0.85,
-        minWageHourly: 11.44,
-        minWageMonthly: 1976.00
+        minWageHourly: 12.71,
+        minWageMonthly: 1932.00
     }
 };
 
