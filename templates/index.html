@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SubTrack · suivis et gestion d'abonnement</title>
+    <script>
+        // Appliquer le thème avant le rendu pour éviter le flash
+        (function() {
+            var theme = localStorage.getItem('subtrack-theme') || 'blue';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,6 +40,12 @@
                 <h1>SubTrack</h1>
                 <div class="user-area">
                     <div class="settings-bar">
+                        <div class="select-wrapper">
+                            <select id="themeSelect" class="header-select">
+                                <option value="dark">Sombre</option>
+                                <option value="blue" selected>Bleuté</option>
+                            </select>
+                        </div>
                         <div class="select-wrapper">
                             <select id="currencySelect" class="header-select">
                                 <option value="EUR">EUR (€)</option>

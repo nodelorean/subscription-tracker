@@ -1,15 +1,52 @@
 
+/* ==================== THEME: DARK (gris sombre) ==================== */
+[data-theme="dark"] {
+    --background: #1A1A1A;
+    --surface: rgba(30, 30, 32, 0.9);
+    --surface-light: rgba(40, 40, 42, 0.8);
+    --primary: #6B7280;
+    --primary-light: #9CA3AF;
+    --text-primary: #F5F5F5;
+    --text-secondary: #D4D4D8;
+    --text-tertiary: #71717A;
+    --separator: rgba(255, 255, 255, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.6);
+    --bg-gradient: #1A1A1A;
+}
+
+/* ==================== THEME: BLUE (bleuté) ==================== */
+[data-theme="blue"] {
+    --background: #0B1120;
+    --surface: rgba(15, 23, 42, 0.85);
+    --surface-light: rgba(30, 41, 59, 0.7);
+    --primary: #3B82F6;
+    --primary-light: #60A5FA;
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-tertiary: #64748B;
+    --separator: rgba(148, 163, 184, 0.1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.5);
+    --bg-gradient: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                   radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                   #0B1120;
+}
+
+/* ==================== VARIABLES PAR DÉFAUT (blue) ==================== */
 :root {
-    --background: #746767;
-    --surface: rgba(28, 28, 30, 0.8);
-    --surface-light: rgba(44, 44, 46, 0.7);
-    --primary: #0A84FF;
-    --primary-light: #5E9EFF;
+    --background: #0B1120;
+    --surface: rgba(15, 23, 42, 0.85);
+    --surface-light: rgba(30, 41, 59, 0.7);
+    --primary: #3B82F6;
+    --primary-light: #60A5FA;
     --secondary: #b3ff00;
-    --text-primary: #FFFFFF;
-    --text-secondary: #EBEBF5;
-    --text-tertiary: #8E8E93;
-    --separator: rgba(84, 84, 88, 0.2);
+    --text-primary: #F1F5F9;
+    --text-secondary: #CBD5E1;
+    --text-tertiary: #64748B;
+    --separator: rgba(148, 163, 184, 0.1);
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.4);
@@ -47,10 +84,9 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(circle at 30% 20%, rgba(10, 132, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(50, 215, 75, 0.1) 0%, transparent 50%),
-                #000000;
+    background: var(--bg-gradient);
     z-index: -1;
+    transition: background 0.4s ease;
 }
 
 .container {
@@ -104,10 +140,21 @@ body {
     position: relative;
 }
 
+.select-wrapper::after {
+    content: '▾';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    font-size: 11px;
+    pointer-events: none;
+}
+
 .header-select {
     appearance: none;
     -webkit-appearance: none;
-    background: rgba(28, 28, 30, 0.8);
+    background: var(--surface);
     backdrop-filter: var(--blur);
     border: 1px solid var(--separator);
     border-radius: 40px;
@@ -123,28 +170,39 @@ body {
 
 .header-select:hover {
     border-color: var(--primary);
-    background: rgba(10, 132, 255, 0.1);
+    background: rgba(107, 114, 128, 0.15);
 }
 
 .header-select:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.2);
 }
 
-.select-wrapper::after {
-    content: '▾';
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-tertiary);
-    font-size: 11px;
-    pointer-events: none;
+/* Thème select - plus visible */
+#themeSelect {
+    font-weight: 600;
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+#themeSelect:hover {
+    border-color: rgba(139, 92, 246, 0.6);
+    background: rgba(139, 92, 246, 0.1);
+}
+
+/* Mode dark : selects gris */
+[data-theme="dark"] .header-select:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .header-select:focus {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .header-select option {
-    background: #1c1c1e;
-    color: white;
+    background: var(--background);
+    color: var(--text-primary);
     padding: 8px;
 }
 
@@ -157,6 +215,14 @@ body {
     border-radius: 40px;
     border: 1px solid var(--separator);
     box-shadow: var(--shadow-sm);
+    color: var(--text-secondary);
+}
+
+/* Mode dark : message bienvenue gris */
+[data-theme="dark"] .welcome-message {
+    background: rgba(30, 30, 32, 0.8);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #D4D4D8;
 }
 
 .subtitle {
@@ -213,10 +279,21 @@ body {
     background: transparent;
     border-color: var(--separator);
     backdrop-filter: none;
+    color: var(--text-secondary);
 }
 
 .btn-ghost:hover {
     background: rgba(255, 255, 255, 0.05);
+}
+
+/* Mode dark : boutons ghost clairs */
+[data-theme="dark"] .btn-ghost {
+    color: #FFFFFF;
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 .actions-bar {
@@ -295,6 +372,18 @@ body {
     flex-direction: column;
     justify-content: space-between;
     overflow: hidden;
+}
+
+/* Mode dark : cartes gris sombre */
+[data-theme="dark"] .subscription-card {
+    background: rgba(25, 25, 27, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .subscription-card:hover {
+    background: rgba(30, 30, 32, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 .subscription-card::before {
@@ -526,6 +615,22 @@ body {
     border-color: var(--primary);
 }
 
+/* Mode dark : section opportunité gris sombre */
+[data-theme="dark"] .opportunity-section {
+    background: rgba(30, 30, 32, 0.9);
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .opportunity-card {
+    background: rgba(20, 20, 22, 0.8);
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] .opportunity-card:hover {
+    background: rgba(30, 30, 32, 0.9);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
 .opportunity-icon {
     width: 56px;
     height: 56px;
@@ -580,6 +685,17 @@ body {
 
 .summary-bar.scrolled:hover {
     opacity: 1;
+}
+
+/* Mode bleuté : barre de résumé avec fond bleu */
+[data-theme="blue"] .summary-bar {
+    background: rgba(15, 23, 42, 0.95);
+    border-top-color: rgba(59, 130, 246, 0.2);
+    box-shadow: 0 -4px 30px rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="blue"] .summary-bar.scrolled {
+    background: rgba(15, 23, 42, 0.7);
 }
 
 .summary-item {
@@ -1930,6 +2046,16 @@ body {
     margin-bottom: 16px;
 }
 
+/* Mode dark : projection chart gris */
+[data-theme="dark"] .projection-chart-container {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .projection-section {
+    background: rgba(30, 30, 32, 0.9);
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
 .projection-chart-container canvas {
     width: 100%;
     height: auto;
@@ -1940,6 +2066,11 @@ body {
     font-weight: 600;
     color: #FF3B30;
     text-align: right;
+}
+
+/* Mode dark : info projection gris-rouge */
+[data-theme="dark"] .projection-info {
+    color: #F87171;
 }
 
 /* CHATBOT */

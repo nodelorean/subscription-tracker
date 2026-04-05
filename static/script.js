@@ -953,7 +953,18 @@ function updatePriceProjection() {
     ctx.clearRect(0, 0, width, height);
     
     // Grille
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const isDark = currentTheme === 'dark';
+    const gridColor = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(255, 255, 255, 0.05)';
+    const lineCurrent = isDark ? 'rgba(150, 150, 160, 0.6)' : 'rgba(10, 132, 255, 0.5)';
+    const lineProjected = isDark ? '#F87171' : '#FF3B30';
+    const fillProjected = isDark ? 'rgba(248, 113, 113, 0.08)' : 'rgba(255, 59, 48, 0.1)';
+    const legendCurrent = isDark ? 'rgba(150, 150, 160, 0.8)' : 'rgba(10, 132, 255, 0.8)';
+    const legendProjected = isDark ? '#F87171' : '#FF3B30';
+    const labelColor = isDark ? 'rgba(255, 255, 255, 0.6)' : 'rgba(255, 255, 255, 0.5)';
+    const legendText = isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(255, 255, 255, 0.7)';
+    
+    ctx.strokeStyle = gridColor;
     ctx.lineWidth = 1;
     for (let i = 0; i <= 4; i++) {
         const y = padding + (chartHeight / 4) * i;
@@ -965,7 +976,7 @@ function updatePriceProjection() {
     
     // Courbe prix actuel
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(10, 132, 255, 0.5)';
+    ctx.strokeStyle = lineCurrent;
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
     for (let i = 0; i < months; i++) {
@@ -977,7 +988,7 @@ function updatePriceProjection() {
     
     // Courbe prix projeté
     ctx.beginPath();
-    ctx.strokeStyle = '#FF3B30';
+    ctx.strokeStyle = lineProjected;
     ctx.lineWidth = 3;
     ctx.setLineDash([]);
     for (let i = 0; i < months; i++) {
@@ -989,7 +1000,7 @@ function updatePriceProjection() {
     
     // Zone remplie
     ctx.beginPath();
-    ctx.fillStyle = 'rgba(255, 59, 48, 0.1)';
+    ctx.fillStyle = fillProjected;
     ctx.moveTo(padding, padding + chartHeight);
     for (let i = 0; i < months; i++) {
         const x = padding + (chartWidth / (months - 1)) * i;
@@ -1001,7 +1012,7 @@ function updatePriceProjection() {
     ctx.fill();
     
     // Labels
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillStyle = labelColor;
     ctx.font = '11px Inter, sans-serif';
     ctx.textAlign = 'center';
     labels.forEach((label, i) => {
@@ -1016,13 +1027,13 @@ function updatePriceProjection() {
     
     ctx.textAlign = 'left';
     ctx.font = '12px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(10, 132, 255, 0.8)';
+    ctx.fillStyle = legendCurrent;
     ctx.fillRect(width - 180, 10, 12, 12);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.fillStyle = legendText;
     ctx.fillText('Prix actuel', width - 162, 20);
-    ctx.fillStyle = '#FF3B30';
+    ctx.fillStyle = legendProjected;
     ctx.fillRect(width - 180, 30, 12, 12);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.fillStyle = legendText;
     ctx.fillText('Prix projeté', width - 162, 40);
     
     const totalIncrease = projectedPrices[months - 1] - currentPrices[months - 1];
@@ -1302,6 +1313,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAllTranslations();
         renderPresets();
         renderSubscriptions();
+    });
+
+    // Thème : charger depuis localStorage ou défaut 'blue'
+    const savedTheme = localStorage.getItem('subtrack-theme') || 'blue';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeSelect').value = savedTheme;
+
+    document.getElementById('themeSelect').addEventListener('change', (e) => {
+        const theme = e.target.value;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('subtrack-theme', theme);
     });
 });
 
